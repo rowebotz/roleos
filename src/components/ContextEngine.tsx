@@ -45,7 +45,7 @@ export function ContextEngine() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, height: 0 }}
-            className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 border border-white/20 shadow-glow text-white"
+            className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-brand to-[#4b5cd1] border border-white/20 shadow-glow text-white"
             role="alert"
           >
             <div className="flex items-center gap-3">
@@ -127,7 +127,7 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
     }
   }, [score, hasCelebrated]);
   const variations = expandThought(localValue);
-  const scoreColor = score > 70 ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" : score > 40 ? "bg-amber-500" : "bg-rose-500";
+  const scoreColor = score > 70 ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" : score > 40 ? "bg-brand" : "bg-rose-500";
   const handleEnter = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
       e.preventDefault();

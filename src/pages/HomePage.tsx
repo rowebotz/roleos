@@ -47,7 +47,7 @@ export function HomePage() {
     return (
       <div className="h-screen w-full bg-background flex items-center justify-center" role="status" aria-live="assertive">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 rounded-lg bg-indigo-600 flex items-center justify-center shadow-[0_0_30px_-5px_rgba(79,70,229,0.6)] animate-pulse">
+          <div className="w-12 h-12 rounded-lg bg-brand flex items-center justify-center shadow-[0_0_30px_-5px_rgba(48,67,180,0.6)] animate-pulse">
             <Terminal className="w-6 h-6 text-white" aria-hidden="true" />
           </div>
           <div className="flex items-center gap-2 text-muted-foreground font-mono text-xs uppercase tracking-[0.3em]">
@@ -64,7 +64,7 @@ export function HomePage() {
       <header className="h-14 border-b border-border px-6 flex items-center justify-between bg-card backdrop-blur-md z-30 shrink-0" role="banner">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded bg-indigo-600 flex items-center justify-center shadow-[0_0_15px_-3px_rgba(79,70,229,0.5)]">
+            <div className="w-8 h-8 rounded bg-brand flex items-center justify-center shadow-[0_0_15px_-3px_rgba(48,67,180,0.5)]">
               <Terminal className="w-4 h-4 text-white" aria-hidden="true" />
             </div>
             <span className="font-display font-bold text-lg tracking-tighter text-foreground">RoleOS</span>
@@ -98,7 +98,7 @@ export function HomePage() {
             {activeMobileView === 'preview' && <ProfilePreview />}
             {activeMobileView === 'export' && (
               <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6">
-                <div className="w-16 h-16 rounded-2xl bg-indigo-600 flex items-center justify-center">
+                <div className="w-16 h-16 rounded-2xl bg-brand flex items-center justify-center shadow-glow">
                   <Terminal className="w-8 h-8 text-white" aria-hidden="true" />
                 </div>
                 <h2 className="text-xl font-bold">Ready to Deploy?</h2>

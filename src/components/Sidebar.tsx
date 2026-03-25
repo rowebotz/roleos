@@ -82,13 +82,13 @@ export function Sidebar() {
         <div>
           <div className="flex items-center justify-between mb-2">
             <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">System Signal</span>
-            <span className="text-[10px] font-mono text-indigo-400" aria-live="polite">
+            <span className="text-[10px] font-mono text-brand font-bold" aria-live="polite">
               {progressPercent}%
             </span>
           </div>
           <div className="h-1 bg-muted rounded-full overflow-hidden" role="progressbar" aria-valuenow={progressPercent} aria-valuemin={0} aria-valuemax={100} aria-label="Overall profile completion">
             <div
-              className="h-full bg-sidebar-primary transition-all duration-500"
+              className="h-full bg-brand transition-all duration-500 shadow-[0_0_8px_rgba(48,67,180,0.5)]"
               style={{ width: `${progressPercent}%` }}
             />
           </div>

@@ -25,20 +25,20 @@ export function IntroHero({ onDismiss }: IntroHeroProps) {
       </div>
       <div className="flex flex-col md:flex-row gap-8 items-start">
         <div className="flex-1 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary/90 text-xs font-bold uppercase tracking-widest">
-            <Terminal className="h-3 w-3 text-primary/90" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/10 border border-brand/20 text-brand text-xs font-bold uppercase tracking-widest">
+            <Terminal className="h-3 w-3 text-brand" />
             System Initialization
           </div>
           <h1 className="text-3xl font-display font-bold tracking-tight text-foreground">
-            Build Your Personal AI <span className="text-primary">Operating Profile</span>
+            Build Your Personal AI <span className="text-brand">Operating Profile</span>
           </h1>
           <p className="text-muted-foreground text-sm leading-relaxed max-w-xl">
-            RoleOS is a structured context engine designed to align LLMs with your specific thinking, 
-            working, and communication protocols. It's not a personality quiz—it's a technical 
+            RoleOS is a structured context engine designed to align LLMs with your specific thinking,
+            working, and communication protocols. It's not a personality quiz—it's a technical
             specification for your AI interactions.
           </p>
           <div className="flex gap-4 pt-2">
-            <Button onClick={onDismiss} className="btn-gradient px-6 h-10 text-xs uppercase tracking-widest font-bold">
+            <Button onClick={onDismiss} className="btn-gradient bg-brand hover:bg-brand/90 px-6 h-10 text-xs uppercase tracking-widest font-bold">
               Initialize System
             </Button>
           </div>
@@ -52,7 +52,7 @@ export function IntroHero({ onDismiss }: IntroHeroProps) {
           ].map((item, i) => (
             <div key={i} className="p-3 rounded-xl bg-card/60 border-border/40 space-y-1">
               <div className="flex items-center gap-2">
-                <item.icon className="h-3 w-3 text-primary" />
+                <item.icon className="h-3 w-3 text-brand" />
                 <span className="text-xs font-bold text-muted-foreground uppercase tracking-tight">{item.title}</span>
               </div>
               <p className="text-xs text-muted-foreground/80 leading-tight">{item.desc}</p>

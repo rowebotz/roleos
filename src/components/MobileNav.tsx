@@ -24,13 +24,13 @@ export function MobileNav() {
             aria-pressed={isActive}
             className={cn(
               "relative flex flex-col items-center gap-1 flex-1 py-1 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-xl",
-              isActive ? "text-primary" : "text-muted-foreground"
+              isActive ? "text-brand" : "text-muted-foreground"
             )}
           >
             {isActive && (
               <motion.div
                 layoutId="activeTabMobile"
-                className="absolute inset-x-2 inset-y-0.5 bg-primary/10 rounded-xl"
+                className="absolute inset-x-2 inset-y-0.5 bg-brand/10 rounded-xl"
                 aria-hidden="true"
               />
             )}
