@@ -1,39 +1,73 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useProfileStore } from '@/store/useProfileStore';
-import { ROLE_OS_SECTIONS } from '@/data/schemas';
+import { ROLE_OS_SECTIONS, Section } from '@/data/schemas';
 import { useContextDensity } from '@/hooks/useContextDensity';
 import { expandThought } from '@/data/expansionTemplates';
 import { Textarea } from '@/components/ui/textarea';
 import { Field } from '@/data/schemas';
 import { Button } from '@/components/ui/button';
-import { Sparkles, AlertTriangle, ChevronRight } from 'lucide-react';
+import { Sparkles, AlertTriangle, ChevronRight, History, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IntroHero } from '@/components/IntroHero';
-
+import { useHotkeys } from 'react-hotkeys-hook';
 export function ContextEngine() {
   const activeId = useProfileStore(s => s.activeSectionId);
   const profile = useProfileStore(s => s.profile);
   const hasDismissedIntro = useProfileStore(s => s.hasDismissedIntro);
+  const hasDismissedResumeBanner = useProfileStore(s => s.hasDismissedResumeBanner);
   const updateField = useProfileStore(s => s.updateField);
   const dismissIntro = useProfileStore(s => s.dismissIntro);
+  const setDismissedResumeBanner = useProfileStore(s => s.setDismissedResumeBanner);
+  const setActiveSection = useProfileStore(s => s.setActiveSection);
   const section = ROLE_OS_SECTIONS.find(s => s.id === activeId);
   const [expandingField, setExpandingField] = useState<string | null>(null);
   const profileSize = Object.keys(profile).length;
+  const isProfilePartial = profileSize > 0 && profileSize < ROLE_OS_SECTIONS.reduce((acc, s) => acc + s.fields.length, 0);
   const showIntro = !hasDismissedIntro && profileSize === 0;
+  const showResumeBanner = isProfilePartial && !hasDismissedResumeBanner;
+  useHotkeys('esc', () => setExpandingField(null), { enableOnFormTags: true });
+  const handleResume = useCallback(() => {
+    const firstIncomplete = ROLE_OS_SECTIONS.find(s => 
+      s.fields.some(f => !profile[f.id])
+    );
+    if (firstIncomplete) {
+      setActiveSection(firstIncomplete.id);
+    }
+    setDismissedResumeBanner(true);
+  }, [profile, setActiveSection, setDismissedResumeBanner]);
   if (!section) return null;
   return (
-    <div className="max-w-2xl mx-auto space-y-10 py-10">
+    <div className="max-w-2xl mx-auto space-y-10 py-10" id={`panel-${activeId}`} role="tabpanel">
       <AnimatePresence>
-        {showIntro && (
-          <IntroHero onDismiss={dismissIntro} />
+        {showIntro && <IntroHero onDismiss={dismissIntro} />}
+        {showResumeBanner && !showIntro && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, height: 0 }}
+            className="flex items-center justify-between p-3 rounded-lg bg-indigo-600/10 border border-indigo-500/20 text-indigo-400"
+          >
+            <div className="flex items-center gap-3">
+              <History className="w-4 h-4" />
+              <span className="text-xs font-bold uppercase tracking-widest">Resume where you left off?</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button size="sm" onClick={handleResume} className="h-7 px-3 text-[10px] bg-indigo-600 hover:bg-indigo-500 text-white font-bold uppercase tracking-widest">
+                Jump to task
+              </Button>
+              <Button variant="ghost" size="icon" onClick={() => setDismissedResumeBanner(true)} className="h-7 w-7 text-indigo-400/50 hover:text-indigo-400">
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
       <header className="space-y-2">
         <h2 className="text-3xl font-bold tracking-tight text-white">{section.title}</h2>
         <p className="text-zinc-400 leading-relaxed">{section.description}</p>
       </header>
-      <div className="space-y-12">
-        {section.fields.map((field) => (
+      <div className="space-y-12 pb-20">
+        {section.fields.map((field, index) => (
           <FieldGroup
             key={field.id}
             field={field}
@@ -42,6 +76,8 @@ export function ContextEngine() {
             onUpdate={(val: string) => updateField(field.id, val)}
             isExpanding={expandingField === field.id}
             setExpanding={(val: boolean) => setExpandingField(val ? field.id : null)}
+            isLast={index === section.fields.length - 1}
+            section={section}
           />
         ))}
       </div>
@@ -55,15 +91,15 @@ interface FieldGroupProps {
   onUpdate: (val: string) => void;
   isExpanding: boolean;
   setExpanding: (val: boolean) => void;
+  isLast: boolean;
+  section: Section;
 }
-
-function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setExpanding }: FieldGroupProps) {
+function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setExpanding, isLast, section }: FieldGroupProps) {
   const [localValue, setLocalValue] = useState(initialValue);
-  // Sync local state if external value changes (e.g. section switch or import)
+  const setActiveSection = useProfileStore(s => s.setActiveSection);
   useEffect(() => {
     setLocalValue(initialValue);
   }, [initialValue]);
-  // Debounce the store update to prevent lag during rapid typing
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       onUpdate(localValue);
@@ -73,6 +109,25 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
   const { score, flags } = useContextDensity(localValue, patterns);
   const variations = expandThought(localValue);
   const scoreColor = score > 70 ? "bg-emerald-500" : score > 40 ? "bg-amber-500" : "bg-rose-500";
+  const handleEnter = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      if (isLast) {
+        const nextSecIndex = ROLE_OS_SECTIONS.findIndex(s => s.id === section.id) + 1;
+        if (nextSecIndex < ROLE_OS_SECTIONS.length) {
+          setActiveSection(ROLE_OS_SECTIONS[nextSecIndex].id);
+        }
+      } else {
+        // Simple DOM-based focus move for Enter
+        const form = (e.target as HTMLElement).closest('div.space-y-12');
+        const textareas = Array.from(form?.querySelectorAll('textarea') || []);
+        const nextIdx = textareas.indexOf(e.target as HTMLTextAreaElement) + 1;
+        if (nextIdx < textareas.length) {
+          (textareas[nextIdx] as HTMLElement).focus();
+        }
+      }
+    }
+  };
   return (
     <div className="space-y-4">
       <div className="flex items-end justify-between">
@@ -80,9 +135,9 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-tighter">Context Density</span>
           <div className="w-24 h-1 bg-zinc-800 rounded-full overflow-hidden">
-            <div 
-              className={`h-full transition-all duration-500 ${scoreColor}`} 
-              style={{ width: `${score}%` }} 
+            <div
+              className={`h-full transition-all duration-500 ${scoreColor}`}
+              style={{ width: `${score}%` }}
             />
           </div>
         </div>
@@ -92,7 +147,8 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
           placeholder={field.placeholder}
           value={localValue}
           onChange={(e) => setLocalValue(e.target.value)}
-          className="min-h-[120px] bg-zinc-900/50 border-zinc-800 text-zinc-200 placeholder:text-zinc-700 focus:ring-indigo-500/50 resize-none transition-all duration-300 group-hover:border-zinc-700"
+          onKeyDown={handleEnter}
+          className="min-h-[120px] bg-zinc-900/50 border-zinc-800 text-zinc-200 placeholder:text-zinc-700 focus:ring-indigo-500/50 resize-none transition-all duration-300 group-hover:border-zinc-700 focus:border-indigo-500/50"
         />
         <div className="absolute bottom-3 right-3 flex items-center gap-2">
           {flags.length > 0 && (
@@ -128,7 +184,7 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
                   onUpdate(val as string);
                   setExpanding(false);
                 }}
-                className="w-full text-left p-3 rounded-md bg-white/5 border border-white/5 hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all group relative"
+                className="w-full text-left p-3 rounded-md bg-white/5 border border-white/5 hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all group relative focus:outline-none focus:ring-1 focus:ring-indigo-500/50"
               >
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-400/80">{key}</span>
@@ -140,6 +196,9 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
           </motion.div>
         )}
       </AnimatePresence>
+      <div className="text-[9px] text-zinc-700 font-mono uppercase tracking-widest text-right">
+        ⌘+Enter to navigate
+      </div>
     </div>
   );
 }

@@ -10,10 +10,20 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Menu, Terminal, Loader2 } from 'lucide-react';
 import { useProfileStore } from '@/store/useProfileStore';
+import { useHotkeys } from 'react-hotkeys-hook';
 export function HomePage() {
   const isMobile = useIsMobile();
   const isHydrated = useProfileStore(s => s.isHydrated);
-  // Hydration Guard: Prevents UI flickering before Zustand storage is ready
+  // Global Hotkeys for Viewport Management
+  useHotkeys('meta+b, ctrl+b', () => {
+    // Focus context engine if sidebar is active or vice versa
+    const activeEl = document.activeElement as HTMLElement;
+    if (activeEl?.tagName === 'TEXTAREA') {
+      document.getElementById('tab-' + useProfileStore.getState().activeSectionId)?.focus();
+    } else {
+      document.querySelector('textarea')?.focus();
+    }
+  });
   if (!isHydrated) {
     return (
       <div className="h-screen w-full bg-zinc-950 flex items-center justify-center">
@@ -31,7 +41,6 @@ export function HomePage() {
   }
   return (
     <div className="h-screen w-full bg-zinc-950 flex flex-col overflow-hidden text-zinc-200 selection:bg-indigo-500/30">
-      {/* Global Header */}
       <header className="h-14 border-b border-white/5 px-6 flex items-center justify-between bg-zinc-950/80 backdrop-blur-md z-30 shrink-0">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
@@ -43,7 +52,7 @@ export function HomePage() {
           {isMobile && (
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-zinc-500">
+                <Button variant="ghost" size="icon" className="text-zinc-500 focus:ring-1 focus:ring-indigo-500/50">
                   <Menu className="w-5 h-5" />
                 </Button>
               </SheetTrigger>
@@ -59,38 +68,34 @@ export function HomePage() {
           <ThemeToggle />
         </div>
       </header>
-      {/* Main Workspace */}
-      <main className="flex-1 flex overflow-hidden">
-        {/* Left: Sidebar */}
+      <main className="flex-1 flex overflow-hidden max-w-[2000px] mx-auto w-full">
         {!isMobile && (
           <aside className="shrink-0 h-full">
             <Sidebar />
           </aside>
         )}
-        {/* Center: Context Engine */}
-        <section className="flex-1 h-full overflow-y-auto custom-scrollbar relative">
-          <div className="max-w-4xl mx-auto px-6 lg:px-12">
+        <section className="flex-1 h-full overflow-y-auto custom-scrollbar relative px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto">
             <ContextEngine />
           </div>
         </section>
-        {/* Right: Profile Preview */}
         {!isMobile && (
           <aside className="shrink-0 h-full">
             <ProfilePreview />
           </aside>
         )}
-        {/* Mobile Preview FAB */}
         {isMobile && (
           <Sheet>
             <SheetTrigger asChild>
-              <Button 
-                className="fixed bottom-6 right-6 rounded-full w-14 h-14 shadow-2xl z-50 bg-indigo-600 hover:bg-indigo-500 transition-colors"
+              <Button
+                className="fixed bottom-6 right-6 rounded-full w-14 h-14 shadow-[0_0_20px_rgba(79,70,229,0.4)] z-50 bg-indigo-600 hover:bg-indigo-500 transition-colors focus:ring-2 focus:ring-white"
                 size="icon"
+                aria-label="Toggle Live Output"
               >
                 <Terminal className="w-6 h-6 text-white" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="bottom" className="h-[85vh] p-0 bg-zinc-950 border-white/10 rounded-t-3xl overflow-hidden">
+            <SheetContent side="bottom" className="h-[85vh] p-0 bg-zinc-950 border-white/10 rounded-t-3xl overflow-hidden shadow-2xl">
               <ProfilePreview />
             </SheetContent>
           </Sheet>
