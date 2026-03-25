@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useProfileStore } from '@/store/useProfileStore';
 import { ROLE_OS_SECTIONS } from '@/data/schemas';
 import { useContextDensity } from '@/hooks/useContextDensity';
@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Sparkles, AlertTriangle, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IntroHero } from '@/components/IntroHero';
+import { useDebounce } from 'react-use';
 export function ContextEngine() {
   const activeId = useProfileStore(s => s.activeSectionId);
   const profile = useProfileStore(s => s.profile);
@@ -35,20 +36,35 @@ export function ContextEngine() {
           <FieldGroup
             key={field.id}
             field={field}
-            value={profile[field.id] || ''}
+            initialValue={profile[field.id] || ''}
             patterns={section.lowSignalPatterns}
-            onUpdate={(val) => updateField(field.id, val)}
+            onUpdate={(val: string) => updateField(field.id, val)}
             isExpanding={expandingField === field.id}
-            setExpanding={(val) => setExpandingField(val ? field.id : null)}
+            setExpanding={(val: boolean) => setExpandingField(val ? field.id : null)}
           />
         ))}
       </div>
     </div>
   );
 }
-function FieldGroup({ field, value, patterns, onUpdate, isExpanding, setExpanding }: any) {
-  const { score, flags } = useContextDensity(value, patterns);
-  const variations = expandThought(value);
+function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setExpanding }: any) {
+  const [localValue, setLocalValue] = useState(initialValue);
+  // Sync local state if external value changes (e.g. section switch or import)
+  useEffect(() => {
+    setLocalValue(initialValue);
+  }, [initialValue]);
+  // Debounce the store update to prevent lag during rapid typing
+  useDebounce(
+    () => {
+      if (localValue !== initialValue) {
+        onUpdate(localValue);
+      }
+    },
+    500,
+    [localValue]
+  );
+  const { score, flags } = useContextDensity(localValue, patterns);
+  const variations = expandThought(localValue);
   const scoreColor = score > 70 ? "bg-emerald-500" : score > 40 ? "bg-amber-500" : "bg-rose-500";
   return (
     <div className="space-y-4">
@@ -57,15 +73,18 @@ function FieldGroup({ field, value, patterns, onUpdate, isExpanding, setExpandin
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-tighter">Context Density</span>
           <div className="w-24 h-1 bg-zinc-800 rounded-full overflow-hidden">
-            <div className={`h-full transition-all duration-500 ${scoreColor}`} style={{ width: `${score}%` }} />
+            <div 
+              className={`h-full transition-all duration-500 ${scoreColor}`} 
+              style={{ width: `${score}%` }} 
+            />
           </div>
         </div>
       </div>
       <div className="relative group">
         <Textarea
           placeholder={field.placeholder}
-          value={value}
-          onChange={(e) => onUpdate(e.target.value)}
+          value={localValue}
+          onChange={(e) => setLocalValue(e.target.value)}
           className="min-h-[120px] bg-zinc-900/50 border-zinc-800 text-zinc-200 placeholder:text-zinc-700 focus:ring-indigo-500/50 resize-none transition-all duration-300 group-hover:border-zinc-700"
         />
         <div className="absolute bottom-3 right-3 flex items-center gap-2">
@@ -98,7 +117,8 @@ function FieldGroup({ field, value, patterns, onUpdate, isExpanding, setExpandin
               <button
                 key={key}
                 onClick={() => {
-                  onUpdate(val);
+                  setLocalValue(val as string);
+                  onUpdate(val as string);
                   setExpanding(false);
                 }}
                 className="w-full text-left p-3 rounded-md bg-white/5 border border-white/5 hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all group relative"

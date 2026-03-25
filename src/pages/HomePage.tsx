@@ -8,9 +8,27 @@ import { Toaster } from '@/components/ui/sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Menu, Terminal } from 'lucide-react';
+import { Menu, Terminal, Loader2 } from 'lucide-react';
+import { useProfileStore } from '@/store/useProfileStore';
 export function HomePage() {
   const isMobile = useIsMobile();
+  const isHydrated = useProfileStore(s => s.isHydrated);
+  // Hydration Guard: Prevents UI flickering before Zustand storage is ready
+  if (!isHydrated) {
+    return (
+      <div className="h-screen w-full bg-zinc-950 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-lg bg-indigo-600 flex items-center justify-center shadow-[0_0_30px_-5px_rgba(79,70,229,0.6)] animate-pulse">
+            <Terminal className="w-6 h-6 text-white" />
+          </div>
+          <div className="flex items-center gap-2 text-zinc-500 font-mono text-xs uppercase tracking-[0.3em]">
+            <Loader2 className="w-3 h-3 animate-spin" />
+            Initializing OS
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="h-screen w-full bg-zinc-950 flex flex-col overflow-hidden text-zinc-200 selection:bg-indigo-500/30">
       {/* Global Header */}
@@ -65,11 +83,11 @@ export function HomePage() {
         {isMobile && (
           <Sheet>
             <SheetTrigger asChild>
-              <Button
-                className="fixed bottom-6 right-6 rounded-full w-14 h-14 shadow-2xl z-50 bg-indigo-600"
+              <Button 
+                className="fixed bottom-6 right-6 rounded-full w-14 h-14 shadow-2xl z-50 bg-indigo-600 hover:bg-indigo-500 transition-colors"
                 size="icon"
               >
-                <Terminal className="w-6 h-6" />
+                <Terminal className="w-6 h-6 text-white" />
               </Button>
             </SheetTrigger>
             <SheetContent side="bottom" className="h-[85vh] p-0 bg-zinc-950 border-white/10 rounded-t-3xl overflow-hidden">
