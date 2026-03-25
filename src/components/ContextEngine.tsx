@@ -4,29 +4,38 @@ import { ROLE_OS_SECTIONS } from '@/data/schemas';
 import { useContextDensity } from '@/hooks/useContextDensity';
 import { expandThought } from '@/data/expansionTemplates';
 import { Textarea } from '@/components/ui/textarea';
-import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Sparkles, AlertTriangle, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { IntroHero } from '@/components/IntroHero';
 export function ContextEngine() {
   const activeId = useProfileStore(s => s.activeSectionId);
   const profile = useProfileStore(s => s.profile);
+  const hasDismissedIntro = useProfileStore(s => s.hasDismissedIntro);
   const updateField = useProfileStore(s => s.updateField);
+  const dismissIntro = useProfileStore(s => s.dismissIntro);
   const section = ROLE_OS_SECTIONS.find(s => s.id === activeId);
   const [expandingField, setExpandingField] = useState<string | null>(null);
+  const profileSize = Object.keys(profile).length;
+  const showIntro = !hasDismissedIntro && profileSize === 0;
   if (!section) return null;
   return (
     <div className="max-w-2xl mx-auto space-y-10 py-10">
+      <AnimatePresence>
+        {showIntro && (
+          <IntroHero onDismiss={dismissIntro} />
+        )}
+      </AnimatePresence>
       <header className="space-y-2">
         <h2 className="text-3xl font-bold tracking-tight text-white">{section.title}</h2>
         <p className="text-zinc-400 leading-relaxed">{section.description}</p>
       </header>
       <div className="space-y-12">
         {section.fields.map((field) => (
-          <FieldGroup 
-            key={field.id} 
-            field={field} 
-            value={profile[field.id] || ''} 
+          <FieldGroup
+            key={field.id}
+            field={field}
+            value={profile[field.id] || ''}
             patterns={section.lowSignalPatterns}
             onUpdate={(val) => updateField(field.id, val)}
             isExpanding={expandingField === field.id}
@@ -98,7 +107,7 @@ function FieldGroup({ field, value, patterns, onUpdate, isExpanding, setExpandin
                   <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-400/80">{key}</span>
                   <ChevronRight className="w-3 h-3 text-zinc-600 group-hover:translate-x-1 transition-transform" />
                 </div>
-                <p className="text-sm text-zinc-400 group-hover:text-zinc-200 line-clamp-2">{val}</p>
+                <p className="text-sm text-zinc-400 group-hover:text-zinc-200 line-clamp-2">{val as string}</p>
               </button>
             ))}
           </motion.div>

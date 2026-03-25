@@ -51,7 +51,7 @@ export function HomePage() {
         )}
         {/* Center: Context Engine */}
         <section className="flex-1 h-full overflow-y-auto custom-scrollbar relative">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto px-6 lg:px-12">
             <ContextEngine />
           </div>
         </section>
@@ -65,7 +65,7 @@ export function HomePage() {
         {isMobile && (
           <Sheet>
             <SheetTrigger asChild>
-              <Button 
+              <Button
                 className="fixed bottom-6 right-6 rounded-full w-14 h-14 shadow-2xl z-50 bg-indigo-600"
                 size="icon"
               >
