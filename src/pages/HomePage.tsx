@@ -1,25 +1,41 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Sidebar } from '@/components/Sidebar';
 import { ContextEngine } from '@/components/ContextEngine';
 import { ProfilePreview } from '@/components/ProfilePreview';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { ExportPanel } from '@/components/ExportPanel';
+import { MobileNav } from '@/components/MobileNav';
 import { Toaster } from '@/components/ui/sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { Menu, Terminal, Loader2 } from 'lucide-react';
+import { Terminal, Loader2 } from 'lucide-react';
 import { useProfileStore } from '@/store/useProfileStore';
 import { useHotkeys } from 'react-hotkeys-hook';
+import { toast } from 'sonner';
 export function HomePage() {
   const isMobile = useIsMobile();
+  const [searchParams] = useSearchParams();
   const isHydrated = useProfileStore(s => s.isHydrated);
-  // Global Hotkeys for Viewport Management
+  const activeMobileView = useProfileStore(s => s.activeMobileView);
+  const savedShortcodes = useProfileStore(s => s.savedShortcodes);
+  const importProfile = useProfileStore(s => s.importProfile);
+  const activeSectionId = useProfileStore(s => s.activeSectionId);
+  // Handle URL Shortcodes
+  useEffect(() => {
+    if (isHydrated) {
+      const id = searchParams.get('id');
+      if (id && savedShortcodes[id]) {
+        importProfile(savedShortcodes[id]);
+        toast.success("Profile loaded from local link", {
+          description: "This snapshot was retrieved from your local storage."
+        });
+      }
+    }
+  }, [isHydrated, searchParams, savedShortcodes, importProfile]);
   useHotkeys('meta+b, ctrl+b', () => {
-    // Focus context engine if sidebar is active or vice versa
     const activeEl = document.activeElement as HTMLElement;
     if (activeEl?.tagName === 'TEXTAREA') {
-      document.getElementById('tab-' + useProfileStore.getState().activeSectionId)?.focus();
+      document.getElementById('tab-' + activeSectionId)?.focus();
     } else {
       document.querySelector('textarea')?.focus();
     }
@@ -40,7 +56,7 @@ export function HomePage() {
     );
   }
   return (
-    <div className="h-screen w-full bg-zinc-950 flex flex-col overflow-hidden text-zinc-200 selection:bg-indigo-500/30">
+    <div className="h-screen w-full bg-zinc-950 flex flex-col overflow-hidden text-zinc-200 selection:bg-indigo-500/30 transition-colors duration-500">
       <header className="h-14 border-b border-white/5 px-6 flex items-center justify-between bg-zinc-950/80 backdrop-blur-md z-30 shrink-0">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
@@ -49,58 +65,47 @@ export function HomePage() {
             </div>
             <span className="font-display font-bold text-lg tracking-tighter text-white">RoleOS</span>
           </div>
-          {isMobile && (
-            <Sheet>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-zinc-500 focus:ring-1 focus:ring-indigo-500/50">
-                  <Menu className="w-5 h-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="p-0 bg-zinc-950 border-white/10 w-64">
-                <Sidebar />
-              </SheetContent>
-            </Sheet>
-          )}
         </div>
         <div className="flex items-center gap-4">
-          <ExportPanel />
+          {!isMobile && <ExportPanel />}
           <div className="h-4 w-[1px] bg-white/5" />
           <ThemeToggle />
         </div>
       </header>
-      <main className="flex-1 flex overflow-hidden max-w-[2000px] mx-auto w-full">
-        {!isMobile && (
-          <aside className="shrink-0 h-full">
-            <Sidebar />
-          </aside>
-        )}
-        <section className="flex-1 h-full overflow-y-auto custom-scrollbar relative px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto">
-            <ContextEngine />
-          </div>
-        </section>
-        {!isMobile && (
-          <aside className="shrink-0 h-full">
-            <ProfilePreview />
-          </aside>
-        )}
-        {isMobile && (
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button
-                className="fixed bottom-6 right-6 rounded-full w-14 h-14 shadow-[0_0_20px_rgba(79,70,229,0.4)] z-50 bg-indigo-600 hover:bg-indigo-500 transition-colors focus:ring-2 focus:ring-white"
-                size="icon"
-                aria-label="Toggle Live Output"
-              >
-                <Terminal className="w-6 h-6 text-white" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="bottom" className="h-[85vh] p-0 bg-zinc-950 border-white/10 rounded-t-3xl overflow-hidden shadow-2xl">
+      <main className="flex-1 flex overflow-hidden max-w-[2000px] mx-auto w-full relative">
+        {!isMobile ? (
+          <>
+            <aside className="shrink-0 h-full">
+              <Sidebar />
+            </aside>
+            <section className="flex-1 h-full overflow-y-auto custom-scrollbar relative px-4 sm:px-6 lg:px-8">
+              <div className="max-w-4xl mx-auto">
+                <ContextEngine />
+              </div>
+            </section>
+            <aside className="shrink-0 h-full">
               <ProfilePreview />
-            </SheetContent>
-          </Sheet>
+            </aside>
+          </>
+        ) : (
+          <div className="flex-1 h-full overflow-y-auto pb-20 px-4">
+            {activeMobileView === 'sidebar' && <Sidebar />}
+            {activeMobileView === 'engine' && <ContextEngine />}
+            {activeMobileView === 'preview' && <ProfilePreview />}
+            {activeMobileView === 'export' && (
+              <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6">
+                <div className="w-16 h-16 rounded-2xl bg-indigo-600 flex items-center justify-center">
+                  <Terminal className="w-8 h-8 text-white" />
+                </div>
+                <h2 className="text-xl font-bold">Ready to Deploy?</h2>
+                <p className="text-zinc-500 text-sm max-w-xs">Generate your optimized AI prompt or share your local snapshot.</p>
+                <ExportPanel />
+              </div>
+            )}
+          </div>
         )}
       </main>
+      {isMobile && <MobileNav />}
       <Toaster position="top-center" richColors theme="dark" />
       <style dangerouslySetInnerHTML={{ __html: `
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
