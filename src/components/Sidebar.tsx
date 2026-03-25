@@ -11,6 +11,11 @@ export function Sidebar() {
   const setActiveSection = useProfileStore(s => s.setActiveSection);
   const resetProfile = useProfileStore(s => s.resetProfile);
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
+    const activeElement = document.activeElement;
+    const isInput = activeElement instanceof HTMLTextAreaElement || 
+                    activeElement instanceof HTMLInputElement;
+    if (isInput) return;
+
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       const currentIndex = ROLE_OS_SECTIONS.findIndex(s => s.id === activeSectionId);

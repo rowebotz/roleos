@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Sidebar } from '@/components/Sidebar';
 import { ContextEngine } from '@/components/ContextEngine';
@@ -19,18 +19,21 @@ export function HomePage() {
   const activeMobileView = useProfileStore(s => s.activeMobileView);
   const savedShortcodes = useProfileStore(s => s.savedShortcodes);
   const importProfile = useProfileStore(s => s.importProfile);
-  const activeSectionId = useProfileStore(s => s.activeSectionId);
+  const processedIdRef = useRef<string | null>(null);
   useEffect(() => {
     if (isHydrated) {
       const id = searchParams.get('id');
-      if (id && savedShortcodes[id]) {
+      if (id && savedShortcodes[id] && processedIdRef.current !== id) {
         importProfile(savedShortcodes[id]);
+        processedIdRef.current = id;
         toast.success("Profile loaded from local link", {
           description: "This snapshot was retrieved from your local storage."
         });
       }
     }
   }, [isHydrated, searchParams, savedShortcodes, importProfile]);
+
+  const activeSectionId = useProfileStore(s => s.activeSectionId);
   useHotkeys('meta+b, ctrl+b', () => {
     const activeEl = document.activeElement as HTMLElement;
     if (activeEl?.tagName === 'TEXTAREA') {
