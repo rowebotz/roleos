@@ -40,7 +40,7 @@ export function Sidebar() {
   }, 0);
   const progressPercent = totalFields > 0 ? Math.round((filledFields / totalFields) * 100) : 0;
   return (
-    <nav className="flex flex-col h-full border-r bg-sidebar backdrop-blur-xl w-64" aria-label="Taxonomy list">
+    <nav className="flex flex-col h-full w-full md:w-64 md:border-r border-border bg-sidebar backdrop-blur-xl" aria-label="Taxonomy list">
       <div className="p-6 border-b border-border flex items-center justify-between">
         <h2 className="text-sm font-bold tracking-widest text-muted-foreground uppercase">Taxonomies</h2>
         <Settings2 className="w-3 h-3 text-muted-foreground" aria-hidden="true" />

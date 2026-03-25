@@ -6,7 +6,7 @@ import { Terminal, Cpu } from 'lucide-react';
 export function ProfilePreview() {
   const profile = useProfileStore(s => s.profile);
   return (
-    <div className="flex flex-col h-full bg-sidebar border-l border-border w-[450px]" aria-label="Live Profile Preview">
+    <div className="flex flex-col h-full w-full md:w-[450px] bg-sidebar md:border-l border-border" aria-label="Live Profile Preview">
       <div className="p-6 border-b border-border flex items-center justify-between bg-sidebar/70 backdrop-blur-sm sticky top-0 z-10">
         <div className="flex items-center gap-2">
           <Terminal className="w-4 h-4 text-primary" aria-hidden="true" />
@@ -19,7 +19,7 @@ export function ProfilePreview() {
           </div>
         </div>
       </div>
-      <ScrollArea className="flex-1 p-8">
+      <ScrollArea className="flex-1 p-6 md:p-8">
         <div className="space-y-12 font-mono text-xs leading-relaxed max-w-sm mx-auto pb-12">
           <header className="text-center space-y-3">
             <h2 className="text-xl font-bold tracking-tighter text-foreground">ROLE_OS_PROFILE_V1</h2>
@@ -56,7 +56,7 @@ export function ProfilePreview() {
             );
           })}
           {Object.keys(profile).length === 0 && (
-            <div className="h-64 flex flex-col items-center justify-center text-center space-y-6" role="status">
+            <div className="h-64 flex flex-col items-center justify-center text-center space-y-6 px-4" role="status">
               <div className="relative">
                 <div className="w-16 h-16 rounded-full border border-dashed border-border/60 flex items-center justify-center">
                   <Cpu className="w-6 h-6 text-border" aria-hidden="true" />
