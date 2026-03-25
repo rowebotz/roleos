@@ -1,6 +1,6 @@
 # Cloudflare Workers React Template
 
-[![Deploy to Cloudflare][cloudflarebutton]]
+[![Deploy to Cloudflare][![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/rowebotz/roleos)]
 
 A production-ready full-stack starter template for Cloudflare Workers with React frontend, Hono backend, and Durable Objects for persistent state management. Includes a demo chat application with users, chat boards, and real-time messaging.
 
@@ -90,7 +90,7 @@ Data auto-seeded on first request. Uses `crypto.randomUUID()` for IDs.
 
 Your app will be live at `https://<project>.workers.dev`.
 
-[![Deploy to Cloudflare][cloudflarebutton]]
+[![Deploy to Cloudflare][![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/rowebotz/roleos)]
 
 **Note**: Durable Objects use SQLite storage; first deploy runs migrations automatically.
 
