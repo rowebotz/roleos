@@ -42,21 +42,21 @@ export function ContextEngine() {
       <AnimatePresence>
         {showIntro && <IntroHero onDismiss={dismissIntro} />}
         {showResumeBanner && !showIntro && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, height: 0 }}
-            className="flex items-center justify-between p-3 rounded-lg bg-indigo-600/10 border border-indigo-500/20 text-indigo-400"
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, height: 0 }}
+              className="flex items-center justify-between p-3 rounded-lg bg-primary/10 border border-primary/30 text-primary-fg"
           >
             <div className="flex items-center gap-3">
               <History className="w-4 h-4" />
               <span className="text-xs font-bold uppercase tracking-widest">Resume where you left off?</span>
             </div>
             <div className="flex items-center gap-2">
-              <Button size="sm" onClick={handleResume} className="h-7 px-3 text-[10px] bg-indigo-600 hover:bg-indigo-500 text-white font-bold uppercase tracking-widest">
+              <Button size="sm" onClick={handleResume} className="h-7 px-3 text-[10px] bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-widest">
                 Jump to task
               </Button>
-              <Button variant="ghost" size="icon" onClick={() => setDismissedResumeBanner(true)} className="h-7 w-7 text-indigo-400/50 hover:text-indigo-400">
+              <Button variant="ghost" size="icon" onClick={() => setDismissedResumeBanner(true)} className="h-7 w-7 text-primary-fg/50 hover:text-primary-fg">
                 <X className="w-4 h-4" />
               </Button>
             </div>
@@ -64,8 +64,8 @@ export function ContextEngine() {
         )}
       </AnimatePresence>
       <header className="space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight text-white">{section.title}</h2>
-        <p className="text-zinc-400 leading-relaxed">{section.description}</p>
+        <h2 className="text-3xl font-bold tracking-tight text-foreground">{section.title}</h2>
+        <p className="text-muted-foreground leading-relaxed">{section.description}</p>
       </header>
       <div className="space-y-12 pb-20">
         {section.fields.map((field, index) => (
@@ -139,10 +139,10 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
   return (
     <div className="space-y-4">
       <div className="flex items-end justify-between">
-        <label className="text-xs font-bold uppercase tracking-widest text-zinc-500">{field.label}</label>
+        <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{field.label}</label>
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-tighter">Context Density</span>
-          <div className="w-24 h-1 bg-zinc-800 rounded-full overflow-hidden relative">
+          <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-tighter">Context Density</span>
+          <div className="w-24 h-1 bg-muted/20 rounded-full overflow-hidden relative">
             <motion.div
               className={`h-full transition-colors duration-500 ${scoreColor}`}
               initial={{ width: 0 }}
@@ -158,7 +158,7 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
           value={localValue}
           onChange={(e) => setLocalValue(e.target.value)}
           onKeyDown={handleEnter}
-          className="min-h-[120px] bg-zinc-900/50 border-zinc-800 text-zinc-200 placeholder:text-zinc-700 focus:ring-indigo-500/50 resize-none transition-all duration-300 group-hover:border-zinc-700 focus:border-indigo-500/50"
+          className="min-h-[120px] bg-card border-border text-foreground placeholder:text-muted group-hover:border-border/75 focus:ring-ring resize-none transition-all duration-300 focus:border-primary/50"
         />
         <AnimatePresence>
           {score >= 70 && (
@@ -169,7 +169,7 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
               className="absolute -top-2 -right-2 z-20"
             >
               <div className="bg-emerald-500 rounded-full p-1 shadow-glow border border-emerald-400/50">
-                <CheckCircle2 className="w-4 h-4 text-white" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-50" />
               </div>
               {[...Array(6)].map((_, i) => (
                 <motion.div
@@ -199,7 +199,7 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
             variant="ghost"
             size="sm"
             onClick={() => setExpanding(!isExpanding)}
-            className="h-8 gap-2 bg-zinc-800 hover:bg-indigo-600 text-zinc-300 hover:text-white border border-white/5 transition-all duration-200"
+            className="h-8 gap-2 bg-muted hover:bg-primary text-muted-foreground hover:text-foreground border-border transition-all duration-200"
           >
             <Sparkles className="w-3 h-3" />
             <span className="text-xs">Expand</span>
@@ -222,13 +222,13 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
                   onUpdate(val as string);
                   setExpanding(false);
                 }}
-                className="w-full text-left p-3 rounded-md bg-white/5 border border-white/5 hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all group relative focus:outline-none focus:ring-1 focus:ring-indigo-500/50"
+                className="w-full text-left p-3 rounded-md bg-muted/50 border border-border hover:border-primary/40 hover:bg-primary/10 transition-all group relative focus:outline-none focus:ring-1 focus:ring-ring"
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-400/80">{key}</span>
-                  <ChevronRight className="w-3 h-3 text-zinc-600 group-hover:translate-x-1 transition-transform" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-primary-fg/80">{key}</span>
+                  <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:translate-x-1 transition-transform" />
                 </div>
-                <p className="text-sm text-zinc-400 group-hover:text-zinc-200 line-clamp-2">{val as string}</p>
+                <p className="text-sm text-muted-foreground group-hover:text-foreground line-clamp-2">{val as string}</p>
               </button>
             ))}
           </motion.div>

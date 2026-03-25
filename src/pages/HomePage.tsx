@@ -42,12 +42,12 @@ export function HomePage() {
   });
   if (!isHydrated) {
     return (
-      <div className="h-screen w-full bg-zinc-950 flex items-center justify-center">
+      <div className="h-screen w-full bg-background flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 rounded-lg bg-indigo-600 flex items-center justify-center shadow-[0_0_30px_-5px_rgba(79,70,229,0.6)] animate-pulse">
             <Terminal className="w-6 h-6 text-white" />
           </div>
-          <div className="flex items-center gap-2 text-zinc-500 font-mono text-xs uppercase tracking-[0.3em]">
+          <div className="flex items-center gap-2 text-muted-foreground font-mono text-xs uppercase tracking-[0.3em]">
             <Loader2 className="w-3 h-3 animate-spin" />
             Initializing OS
           </div>
@@ -56,19 +56,19 @@ export function HomePage() {
     );
   }
   return (
-    <div className="h-screen w-full bg-zinc-950 flex flex-col overflow-hidden text-zinc-200 selection:bg-indigo-500/30 transition-colors duration-500">
-      <header className="h-14 border-b border-white/5 px-6 flex items-center justify-between bg-zinc-950/80 backdrop-blur-md z-30 shrink-0">
+    <div className="h-screen w-full bg-background flex flex-col overflow-hidden text-foreground selection:bg-primary/20 transition-colors duration-500">
+      <header className="h-14 border-b border-border px-6 flex items-center justify-between bg-card backdrop-blur-md z-30 shrink-0">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded bg-indigo-600 flex items-center justify-center shadow-[0_0_15px_-3px_rgba(79,70,229,0.5)]">
               <Terminal className="w-4 h-4 text-white" />
             </div>
-            <span className="font-display font-bold text-lg tracking-tighter text-white">RoleOS</span>
+            <span className="font-display font-bold text-lg tracking-tighter text-foreground">RoleOS</span>
           </div>
         </div>
         <div className="flex items-center gap-4">
           {!isMobile && <ExportPanel />}
-          <div className="h-4 w-[1px] bg-white/5" />
+          <div className="h-4 w-[1px] bg-border/20" />
           <ThemeToggle />
         </div>
       </header>
@@ -98,7 +98,7 @@ export function HomePage() {
                   <Terminal className="w-8 h-8 text-white" />
                 </div>
                 <h2 className="text-xl font-bold">Ready to Deploy?</h2>
-                <p className="text-zinc-500 text-sm max-w-xs">Generate your optimized AI prompt or share your local snapshot.</p>
+                <p className="text-muted-foreground text-sm max-w-xs">Generate your optimized AI prompt or share your local snapshot.</p>
                 <ExportPanel />
               </div>
             )}
@@ -106,12 +106,12 @@ export function HomePage() {
         )}
       </main>
       {isMobile && <MobileNav />}
-      <Toaster position="top-center" richColors theme="dark" />
+      <Toaster position="top-center" richColors theme="system" />
       <style dangerouslySetInnerHTML={{ __html: `
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #18181b; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #27272a; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: hsl(var(--ring)/0.3); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: hsl(var(--ring)/0.5); }
       `}} />
     </div>
   );

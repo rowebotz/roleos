@@ -10,7 +10,7 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       variant="ghost"
       size="icon"
-      className="relative h-10 w-10 bg-zinc-900/50 border border-zinc-800 hover:border-indigo-500/30 text-zinc-400 hover:text-white transition-all active:scale-90 focus:ring-1 focus:ring-indigo-500/50"
+      className="relative h-10 w-10 bg-card border-border hover:border-ring/40 text-muted-foreground hover:text-foreground transition-all active:scale-90 focus:ring-ring ring-offset-background ring-2 focus:ring-2"
       aria-label="Toggle theme"
     >
       <AnimatePresence mode="wait">

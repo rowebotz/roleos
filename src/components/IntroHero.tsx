@@ -11,28 +11,28 @@ export function IntroHero({ onDismiss }: IntroHeroProps) {
       initial={{ opacity: 0, y: -20, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, height: 0, marginBottom: 0 }}
-      className="relative overflow-hidden rounded-2xl border border-white/5 bg-zinc-900/40 p-8 shadow-2xl backdrop-blur-md mb-12"
+      className="relative overflow-hidden rounded-2xl border-border bg-card/50 p-8 shadow-2xl backdrop-blur-md mb-12"
     >
       <div className="absolute top-4 right-4">
         <Button
           variant="ghost"
           size="icon"
           onClick={onDismiss}
-          className="h-8 w-8 text-zinc-500 hover:text-white hover:bg-white/5"
+          className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/30"
         >
           <X className="h-4 w-4" />
         </Button>
       </div>
       <div className="flex flex-col md:flex-row gap-8 items-start">
         <div className="flex-1 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-bold uppercase tracking-widest">
-            <Terminal className="h-3 w-3" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary/90 text-xs font-bold uppercase tracking-widest">
+            <Terminal className="h-3 w-3 text-primary/90" />
             System Initialization
           </div>
-          <h1 className="text-3xl font-display font-bold tracking-tight text-white">
-            Build Your Personal AI <span className="text-indigo-500">Operating Profile</span>
+          <h1 className="text-3xl font-display font-bold tracking-tight text-foreground">
+            Build Your Personal AI <span className="text-primary">Operating Profile</span>
           </h1>
-          <p className="text-zinc-400 text-sm leading-relaxed max-w-xl">
+          <p className="text-muted-foreground text-sm leading-relaxed max-w-xl">
             RoleOS is a structured context engine designed to align LLMs with your specific thinking, 
             working, and communication protocols. It's not a personality quiz—it's a technical 
             specification for your AI interactions.
@@ -50,12 +50,12 @@ export function IntroHero({ onDismiss }: IntroHeroProps) {
             { icon: ShieldCheck, title: "Systems Approach", desc: "Predictable AI behavior." },
             { icon: Terminal, title: "Export Ready", desc: "Claude, GPT, Gemini formats." }
           ].map((item, i) => (
-            <div key={i} className="p-3 rounded-xl bg-zinc-950/50 border border-white/5 space-y-1">
+            <div key={i} className="p-3 rounded-xl bg-card/60 border-border/40 space-y-1">
               <div className="flex items-center gap-2">
-                <item.icon className="h-3 w-3 text-indigo-500" />
-                <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-tight">{item.title}</span>
+                <item.icon className="h-3 w-3 text-primary" />
+                <span className="text-xs font-bold text-muted-foreground uppercase tracking-tight">{item.title}</span>
               </div>
-              <p className="text-[10px] text-zinc-500 leading-tight">{item.desc}</p>
+              <p className="text-xs text-muted-foreground/80 leading-tight">{item.desc}</p>
             </div>
           ))}
         </div>
