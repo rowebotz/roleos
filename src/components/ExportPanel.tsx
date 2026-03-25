@@ -48,68 +48,68 @@ export function ExportPanel() {
           Deploy Profile
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[700px] bg-zinc-950 border-white/10 text-white max-h-[90vh] flex flex-col">
+      <DialogContent className="sm:max-w-[700px] bg-background border-border text-foreground max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold tracking-tight">System Deployment Hub</DialogTitle>
         </DialogHeader>
         <div className="space-y-6 overflow-y-auto pr-2 custom-scrollbar">
-          <section className="p-4 rounded-xl bg-indigo-500/5 border border-indigo-500/20 space-y-4">
+          <section className="p-4 rounded-xl bg-primary/10 border border-primary/20 space-y-4">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <LinkIcon className="w-4 h-4 text-indigo-400" />
-                <h3 className="text-xs font-bold uppercase tracking-widest text-indigo-400">Localized Short-Link</h3>
-              </div>
-              <Sparkles className="w-3 h-3 text-indigo-500" />
+<div className="flex items-center gap-2">
+  <LinkIcon className="w-4 h-4 text-primary-foreground" />
+  <h3 className="text-xs font-bold uppercase tracking-widest text-primary-foreground">Localized Short-Link</h3>
+</div>
+              <Sparkles className="w-3 h-3 text-primary-foreground" />
             </div>
             {!shortcode ? (
-              <Button
-                onClick={handleGenerateLink}
-                variant="outline"
-                className="w-full border-indigo-500/20 bg-indigo-500/10 text-indigo-300 hover:bg-indigo-500/20"
-              >
+<Button
+  onClick={handleGenerateLink}
+  variant="outline"
+  className="w-full border-primary/30 bg-primary/10 text-primary-foreground hover:bg-primary/20"
+>
                 Generate Snapshot Link
               </Button>
             ) : (
               <div className="flex gap-2">
-                <div className="flex-1 px-3 py-2 rounded bg-black/40 border border-white/5 font-mono text-xs text-zinc-400 truncate">
+                <div className="flex-1 px-3 py-2 rounded bg-muted/70 border border-border/50 font-mono text-xs text-muted-foreground truncate">
                   {shareUrl}
                 </div>
-                <Button size="icon" variant="ghost" className="bg-white/5" onClick={() => copy(shareUrl)}>
+                <Button size="icon" variant="ghost" className="bg-muted/20" onClick={() => copy(shareUrl)}>
                   <Copy className="w-4 h-4" />
                 </Button>
               </div>
             )}
-            <p className="text-[10px] text-zinc-500 italic">Links are stored in your local browser storage for quick retrieval.</p>
+            <p className="text-[10px] text-muted-foreground italic">Links are stored in your local browser storage for quick retrieval.</p>
           </section>
           <section className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Terminal className="w-4 h-4 text-zinc-500" />
-              <h3 className="text-xs font-bold uppercase tracking-widest text-zinc-500">AI Platform Exports</h3>
-            </div>
+<div className="flex items-center gap-2">
+  <Terminal className="w-4 h-4 text-muted-foreground" />
+  <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">AI Platform Exports</h3>
+</div>
             <Tabs defaultValue="claude" className="w-full">
-              <TabsList className="bg-zinc-900 border border-white/5 w-full justify-start h-auto p-1 mb-4 overflow-x-auto">
-                <TabsTrigger value="claude" className="data-[state=active]:bg-zinc-800">Claude</TabsTrigger>
-                <TabsTrigger value="chatgpt" className="data-[state=active]:bg-zinc-800">ChatGPT</TabsTrigger>
-                <TabsTrigger value="gemini" className="data-[state=active]:bg-zinc-800">Gemini</TabsTrigger>
-                <TabsTrigger value="json" className="data-[state=active]:bg-zinc-800">JSON</TabsTrigger>
+              <TabsList className="bg-muted border border-border w-full justify-start h-auto p-1 mb-4 overflow-x-auto">
+<TabsTrigger value="claude" className="data-[state=active]:bg-muted/60">Claude</TabsTrigger>
+<TabsTrigger value="chatgpt" className="data-[state=active]:bg-muted/60">ChatGPT</TabsTrigger>
+<TabsTrigger value="gemini" className="data-[state=active]:bg-muted/60">Gemini</TabsTrigger>
+<TabsTrigger value="json" className="data-[state=active]:bg-muted/60">JSON</TabsTrigger>
               </TabsList>
               {Object.entries(formats).map(([key, content]) => (
                 <TabsContent key={key} value={key} className="space-y-4 outline-none">
                   <div className="relative group">
-                    <pre className="p-4 rounded-lg bg-black/50 border border-white/5 font-mono text-[11px] overflow-auto max-h-[300px] text-zinc-400 selection:bg-indigo-500/30">
+                    <pre className="p-4 rounded-lg bg-muted/80 border border-border/40 font-mono text-[11px] overflow-auto max-h-[300px] text-foreground selection:bg-indigo-500/30">
                       {content}
                     </pre>
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      className="absolute top-2 right-2 text-zinc-500 hover:text-white bg-zinc-900/50 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => copy(content)}
-                    >
+<Button
+  size="icon"
+  variant="ghost"
+  className="absolute top-2 right-2 text-muted-foreground hover:text-foreground bg-card/50 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity"
+  onClick={() => copy(content)}
+>
                       <Copy className="w-4 h-4" />
                     </Button>
                   </div>
                   <div className="flex gap-2 justify-end">
-                    <Button variant="outline" className="border-white/5 bg-zinc-900 text-xs h-9" onClick={() => {
+                    <Button variant="outline" className="border-border/30 bg-muted text-xs h-9" onClick={() => {
                       const blob = new Blob([content], { type: 'text/plain' });
                       const url = URL.createObjectURL(blob);
                       const a = document.createElement('a');

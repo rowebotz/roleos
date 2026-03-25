@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useProfileStore } from '@/store/useProfileStore';
-import { ROLE_OS_SECTIONS, Section } from '@/data/schemas';
+import { ROLE_OS_SECTIONS, Section, Field } from '@/data/schemas';
 import { useContextDensity } from '@/hooks/useContextDensity';
 import { expandThought } from '@/data/expansionTemplates';
 import { Textarea } from '@/components/ui/textarea';
-import { Field } from '@/data/schemas';
 import { Button } from '@/components/ui/button';
 import { Sparkles, AlertTriangle, ChevronRight, History, X, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -38,7 +37,7 @@ export function ContextEngine() {
   }, [profile, setActiveSection, setDismissedResumeBanner]);
   if (!section) return null;
   return (
-    <div className="max-w-2xl mx-auto space-y-10 py-10" id={`panel-${activeId}`} role="tabpanel">
+    <div className="max-w-2xl mx-auto space-y-10 py-10" id={`panel-${activeId}`} role="tabpanel" aria-labelledby={`tab-${activeId}`}>
       <AnimatePresence>
         {showIntro && <IntroHero onDismiss={dismissIntro} />}
         {showResumeBanner && !showIntro && (
@@ -46,25 +45,27 @@ export function ContextEngine() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, height: 0 }}
-              className="flex items-center justify-between p-3 rounded-lg bg-primary/10 border border-primary/30 text-primary-fg"
+              className="flex items-center justify-between p-3 rounded-lg bg-primary/10 border border-primary/30 text-primary-foreground"
+              role="alert"
           >
             <div className="flex items-center gap-3">
-              <History className="w-4 h-4" />
-              <span className="text-xs font-bold uppercase tracking-widest">Resume where you left off?</span>
+              <History className="w-4 h-4" aria-hidden="true" />
+              <span className="text-xs font-bold uppercase tracking-widest">Resume session?</span>
             </div>
             <div className="flex items-center gap-2">
               <Button size="sm" onClick={handleResume} className="h-7 px-3 text-[10px] bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-widest">
                 Jump to task
               </Button>
-              <Button variant="ghost" size="icon" onClick={() => setDismissedResumeBanner(true)} className="h-7 w-7 text-primary-fg/50 hover:text-primary-fg">
+              <Button variant="ghost" size="icon" onClick={() => setDismissedResumeBanner(true)} className="h-7 w-7 hover:bg-primary/20">
                 <X className="w-4 h-4" />
+                <span className="sr-only">Dismiss banner</span>
               </Button>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
       <header className="space-y-2">
-        <h2 className="text-3xl font-bold tracking-tight text-foreground">{section.title}</h2>
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">{section.title}</h1>
         <p className="text-muted-foreground leading-relaxed">{section.description}</p>
       </header>
       <div className="space-y-12 pb-20">
@@ -127,8 +128,8 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
           setActiveSection(ROLE_OS_SECTIONS[nextSecIndex].id);
         }
       } else {
-        const form = (e.target as HTMLElement).closest('div.space-y-12');
-        const textareas = Array.from(form?.querySelectorAll('textarea') || []);
+        const parent = (e.target as HTMLElement).closest('div.space-y-12');
+        const textareas = Array.from(parent?.querySelectorAll('textarea') || []);
         const nextIdx = textareas.indexOf(e.target as HTMLTextAreaElement) + 1;
         if (nextIdx < textareas.length) {
           (textareas[nextIdx] as HTMLElement).focus();
@@ -137,12 +138,12 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
     }
   };
   return (
-    <div className="space-y-4">
+    <section className="space-y-4" aria-labelledby={`label-${field.id}`}>
       <div className="flex items-end justify-between">
-        <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{field.label}</label>
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-tighter">Context Density</span>
-          <div className="w-24 h-1 bg-muted/20 rounded-full overflow-hidden relative">
+        <label id={`label-${field.id}`} className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{field.label}</label>
+        <div className="flex items-center gap-2" aria-live="polite">
+          <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-tighter">Signal: {score}%</span>
+          <div className="w-24 h-1 bg-muted/20 rounded-full overflow-hidden relative" role="progressbar" aria-valuenow={score} aria-valuemin={0} aria-valuemax={100}>
             <motion.div
               className={`h-full transition-colors duration-500 ${scoreColor}`}
               initial={{ width: 0 }}
@@ -154,54 +155,46 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
       </div>
       <div className="relative group">
         <Textarea
+          id={field.id}
+          aria-label={field.label}
           placeholder={field.placeholder}
           value={localValue}
           onChange={(e) => setLocalValue(e.target.value)}
           onKeyDown={handleEnter}
-          className="min-h-[120px] bg-card border-border text-foreground placeholder:text-muted group-hover:border-border/75 focus:ring-ring resize-none transition-all duration-300 focus:border-primary/50"
+          className="min-h-[120px] bg-card border-border text-foreground placeholder:text-muted-foreground/80 group-hover:border-border/75 focus:ring-ring focus:ring-offset-2 resize-none transition-all duration-300 focus:border-primary/50"
         />
         <AnimatePresence>
           {score >= 70 && (
-            <motion.div 
+            <motion.div
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0, opacity: 0 }}
               className="absolute -top-2 -right-2 z-20"
+              role="status"
             >
               <div className="bg-emerald-500 rounded-full p-1 shadow-glow border border-emerald-400/50">
                 <CheckCircle2 className="w-4 h-4 text-emerald-50" />
+                <span className="sr-only">High signal density achieved</span>
               </div>
-              {[...Array(6)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 1, scale: 0 }}
-                  animate={{ 
-                    opacity: 0, 
-                    scale: 1,
-                    x: (Math.random() - 0.5) * 60,
-                    y: (Math.random() - 0.5) * 60
-                  }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
-                  className="absolute top-1/2 left-1/2 w-1.5 h-1.5 bg-emerald-400 rounded-full"
-                />
-              ))}
             </motion.div>
           )}
         </AnimatePresence>
         <div className="absolute bottom-3 right-3 flex items-center gap-2">
           {flags.length > 0 && (
-            <div className="flex items-center gap-1 text-[10px] font-bold text-amber-500/80 bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20">
-              <AlertTriangle className="w-3 h-3" />
-              Low Signal
+            <div className="flex items-center gap-1 text-[10px] font-bold text-amber-500/80 bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20" role="alert">
+              <AlertTriangle className="w-3 h-3" aria-hidden="true" />
+              Low Signal Detected
             </div>
           )}
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setExpanding(!isExpanding)}
+            aria-expanded={isExpanding}
+            aria-controls={`variations-${field.id}`}
             className="h-8 gap-2 bg-muted hover:bg-primary text-muted-foreground hover:text-foreground border-border transition-all duration-200"
           >
-            <Sparkles className="w-3 h-3" />
+            <Sparkles className="w-3 h-3" aria-hidden="true" />
             <span className="text-xs">Expand</span>
           </Button>
         </div>
@@ -209,6 +202,7 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
       <AnimatePresence>
         {isExpanding && (
           <motion.div
+            id={`variations-${field.id}`}
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -222,11 +216,11 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
                   onUpdate(val as string);
                   setExpanding(false);
                 }}
-                className="w-full text-left p-3 rounded-md bg-muted/50 border border-border hover:border-primary/40 hover:bg-primary/10 transition-all group relative focus:outline-none focus:ring-1 focus:ring-ring"
+                className="w-full text-left p-3 rounded-md bg-muted/50 border border-border hover:border-primary/40 hover:bg-primary/10 transition-all group relative focus:outline-none focus:ring-2 focus:ring-ring"
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-primary-fg/80">{key}</span>
-                  <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-primary/80">{key}</span>
+                  <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                 </div>
                 <p className="text-sm text-muted-foreground group-hover:text-foreground line-clamp-2">{val as string}</p>
               </button>
@@ -234,6 +228,6 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </section>
   );
 }
