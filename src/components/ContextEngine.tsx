@@ -4,11 +4,12 @@ import { ROLE_OS_SECTIONS } from '@/data/schemas';
 import { useContextDensity } from '@/hooks/useContextDensity';
 import { expandThought } from '@/data/expansionTemplates';
 import { Textarea } from '@/components/ui/textarea';
+import { Field } from '@/data/schemas';
 import { Button } from '@/components/ui/button';
 import { Sparkles, AlertTriangle, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IntroHero } from '@/components/IntroHero';
-import { useDebounce } from 'react-use';
+
 export function ContextEngine() {
   const activeId = useProfileStore(s => s.activeSectionId);
   const profile = useProfileStore(s => s.profile);
@@ -47,22 +48,28 @@ export function ContextEngine() {
     </div>
   );
 }
-function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setExpanding }: any) {
+interface FieldGroupProps {
+  field: Field;
+  initialValue: string;
+  patterns: string[];
+  onUpdate: (val: string) => void;
+  isExpanding: boolean;
+  setExpanding: (val: boolean) => void;
+}
+
+function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setExpanding }: FieldGroupProps) {
   const [localValue, setLocalValue] = useState(initialValue);
   // Sync local state if external value changes (e.g. section switch or import)
   useEffect(() => {
     setLocalValue(initialValue);
   }, [initialValue]);
   // Debounce the store update to prevent lag during rapid typing
-  useDebounce(
-    () => {
-      if (localValue !== initialValue) {
-        onUpdate(localValue);
-      }
-    },
-    500,
-    [localValue]
-  );
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      onUpdate(localValue);
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [localValue, onUpdate]);
   const { score, flags } = useContextDensity(localValue, patterns);
   const variations = expandThought(localValue);
   const scoreColor = score > 70 ? "bg-emerald-500" : score > 40 ? "bg-amber-500" : "bg-rose-500";
