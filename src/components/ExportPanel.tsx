@@ -53,20 +53,20 @@ export function ExportPanel() {
           <DialogTitle className="text-2xl font-bold tracking-tight">System Deployment Hub</DialogTitle>
         </DialogHeader>
         <div className="space-y-6 overflow-y-auto pr-2 custom-scrollbar">
-          <section className="p-4 rounded-xl bg-primary/10 border border-primary/20 space-y-4">
+          <section className="p-4 rounded-xl bg-brand/10 border border-brand/20 space-y-4">
             <div className="flex items-center justify-between">
-<div className="flex items-center gap-2">
-  <LinkIcon className="w-4 h-4 text-primary-foreground" />
-  <h3 className="text-xs font-bold uppercase tracking-widest text-primary-foreground">Localized Short-Link</h3>
-</div>
-              <Sparkles className="w-3 h-3 text-primary-foreground" />
+              <div className="flex items-center gap-2">
+                <LinkIcon className="w-4 h-4 text-brand" />
+                <h3 className="text-xs font-bold uppercase tracking-widest text-foreground">Localized Short-Link</h3>
+              </div>
+              <Sparkles className="w-3 h-3 text-brand" />
             </div>
             {!shortcode ? (
-<Button
-  onClick={handleGenerateLink}
-  variant="outline"
-  className="w-full border-primary/30 bg-primary/10 text-primary-foreground hover:bg-primary/20"
->
+              <Button
+                onClick={handleGenerateLink}
+                variant="outline"
+                className="w-full border-brand/30 bg-brand/5 text-foreground hover:bg-brand hover:text-white transition-colors"
+              >
                 Generate Snapshot Link
               </Button>
             ) : (
@@ -82,29 +82,29 @@ export function ExportPanel() {
             <p className="text-[10px] text-muted-foreground italic">Links are stored in your local browser storage for quick retrieval.</p>
           </section>
           <section className="space-y-4">
-<div className="flex items-center gap-2">
-  <Terminal className="w-4 h-4 text-muted-foreground" />
-  <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">AI Platform Exports</h3>
-</div>
+            <div className="flex items-center gap-2">
+              <Terminal className="w-4 h-4 text-muted-foreground" />
+              <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">AI Platform Exports</h3>
+            </div>
             <Tabs defaultValue="claude" className="w-full">
               <TabsList className="bg-muted border border-border w-full justify-start h-auto p-1 mb-4 overflow-x-auto">
-<TabsTrigger value="claude" className="data-[state=active]:bg-muted/60">Claude</TabsTrigger>
-<TabsTrigger value="chatgpt" className="data-[state=active]:bg-muted/60">ChatGPT</TabsTrigger>
-<TabsTrigger value="gemini" className="data-[state=active]:bg-muted/60">Gemini</TabsTrigger>
-<TabsTrigger value="json" className="data-[state=active]:bg-muted/60">JSON</TabsTrigger>
+                <TabsTrigger value="claude" className="data-[state=active]:bg-brand data-[state=active]:text-white">Claude</TabsTrigger>
+                <TabsTrigger value="chatgpt" className="data-[state=active]:bg-brand data-[state=active]:text-white">ChatGPT</TabsTrigger>
+                <TabsTrigger value="gemini" className="data-[state=active]:bg-brand data-[state=active]:text-white">Gemini</TabsTrigger>
+                <TabsTrigger value="json" className="data-[state=active]:bg-brand data-[state=active]:text-white">JSON</TabsTrigger>
               </TabsList>
               {Object.entries(formats).map(([key, content]) => (
                 <TabsContent key={key} value={key} className="space-y-4 outline-none">
                   <div className="relative group">
-                    <pre className="p-4 rounded-lg bg-muted/80 border border-border/40 font-mono text-[11px] overflow-auto max-h-[300px] text-foreground selection:bg-indigo-500/30">
+                    <pre className="p-4 rounded-lg bg-muted/80 border border-border/40 font-mono text-[11px] overflow-auto max-h-[300px] text-foreground selection:bg-brand/20">
                       {content}
                     </pre>
-<Button
-  size="icon"
-  variant="ghost"
-  className="absolute top-2 right-2 text-muted-foreground hover:text-foreground bg-card/50 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity"
-  onClick={() => copy(content)}
->
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="absolute top-2 right-2 text-muted-foreground hover:text-foreground bg-card/50 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity"
+                      onClick={() => copy(content)}
+                    >
                       <Copy className="w-4 h-4" />
                     </Button>
                   </div>

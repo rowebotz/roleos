@@ -105,10 +105,10 @@
   }
   .btn-gradient {
     @apply btn text-white shadow-primary hover:shadow-glow hover:scale-[1.02] active:scale-95;
-    background: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%);
+    background: linear-gradient(135deg, #3043b4 0%, #253491 100%);
   }
   .text-gradient {
-    background: linear-gradient(90deg, #4F46E5 0%, #818CF8 100%);
+    background: linear-gradient(90deg, #3043b4 0%, #5c6ce4 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;

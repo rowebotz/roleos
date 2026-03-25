@@ -144,8 +144,8 @@ export default {
   		},
   		boxShadow: {
   			soft: '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
-  			glow: '0 0 20px -5px rgba(99, 102, 241, 0.4)',
-  			'glow-lg': '0 0 40px -10px rgba(99, 102, 241, 0.3)',
+  			glow: '0 0 20px -5px rgba(48, 67, 180, 0.4)',
+  			'glow-lg': '0 0 40px -10px rgba(48, 67, 180, 0.3)',
   			primary: '0 0 20px -5px hsl(var(--primary) / 0.4)',
   			glass: '0 8px 32px 0 rgba(31, 38, 135, 0.37)'
   		},
@@ -190,10 +190,10 @@ export default {
   			},
   			glow: {
   				'0%, 100%': {
-  					boxShadow: '0 0 20px -5px rgba(99, 102, 241, 0.4)'
+  					boxShadow: '0 0 20px -5px rgba(48, 67, 180, 0.4)'
   				},
   				'50%': {
-  					boxShadow: '0 0 40px -5px rgba(99, 102, 241, 0.6)'
+  					boxShadow: '0 0 40px -5px rgba(48, 67, 180, 0.6)'
   				}
   			},
   			float: {

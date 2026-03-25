@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { useProfileStore } from '@/store/useProfileStore';
 import { ROLE_OS_SECTIONS, Section, Field } from '@/data/schemas';
 import { useContextDensity } from '@/hooks/useContextDensity';
@@ -35,6 +35,9 @@ export function ContextEngine() {
     }
     setDismissedResumeBanner(true);
   }, [profile, setActiveSection, setDismissedResumeBanner]);
+  const handleUpdate = useCallback((fieldId: string, val: string) => {
+    updateField(fieldId, val);
+  }, [updateField]);
   if (!section) return null;
   return (
     <div className="max-w-2xl mx-auto space-y-10 py-10" id={`panel-${activeId}`} role="tabpanel" aria-labelledby={`tab-${activeId}`}>
@@ -53,17 +56,17 @@ export function ContextEngine() {
               <span className="text-xs font-bold uppercase tracking-widest">Resume session?</span>
             </div>
             <div className="flex items-center gap-2">
-              <Button 
-                size="sm" 
-                onClick={handleResume} 
+              <Button
+                size="sm"
+                onClick={handleResume}
                 className="h-7 px-3 text-[10px] bg-white/20 hover:bg-white/30 text-white border border-white/20 font-bold uppercase tracking-widest transition-colors"
               >
                 Jump to task
               </Button>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={() => setDismissedResumeBanner(true)} 
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setDismissedResumeBanner(true)}
                 className="h-7 w-7 text-white/80 hover:text-white hover:bg-white/10"
               >
                 <X className="w-4 h-4" />
@@ -84,7 +87,7 @@ export function ContextEngine() {
             field={field}
             initialValue={profile[field.id] || ''}
             patterns={section.lowSignalPatterns}
-            onUpdate={(val: string) => updateField(field.id, val)}
+            onUpdate={handleUpdate}
             isExpanding={expandingField === field.id}
             setExpanding={(val: boolean) => setExpandingField(val ? field.id : null)}
             isLast={index === section.fields.length - 1}
@@ -99,13 +102,13 @@ interface FieldGroupProps {
   field: Field;
   initialValue: string;
   patterns: string[];
-  onUpdate: (val: string) => void;
+  onUpdate: (fieldId: string, val: string) => void;
   isExpanding: boolean;
   setExpanding: (val: boolean) => void;
   isLast: boolean;
   section: Section;
 }
-function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setExpanding, isLast, section }: FieldGroupProps) {
+const FieldGroup = memo(({ field, initialValue, patterns, onUpdate, isExpanding, setExpanding, isLast, section }: FieldGroupProps) => {
   const [localValue, setLocalValue] = useState(initialValue);
   const setActiveSection = useProfileStore(s => s.setActiveSection);
   const [hasCelebrated, setHasCelebrated] = useState(false);
@@ -114,10 +117,12 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
   }, [initialValue]);
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      onUpdate(localValue);
+      if (localValue !== initialValue) {
+        onUpdate(field.id, localValue);
+      }
     }, 500);
     return () => clearTimeout(timeoutId);
-  }, [localValue, onUpdate]);
+  }, [localValue, onUpdate, field.id, initialValue]);
   const { score, flags } = useContextDensity(localValue, patterns);
   useEffect(() => {
     if (score >= 70 && !hasCelebrated) {
@@ -201,7 +206,7 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
             onClick={() => setExpanding(!isExpanding)}
             aria-expanded={isExpanding}
             aria-controls={`variations-${field.id}`}
-            className="h-8 gap-2 bg-muted hover:bg-primary text-muted-foreground hover:text-foreground border-border transition-all duration-200"
+            className="h-8 gap-2 bg-muted hover:bg-brand hover:text-white text-muted-foreground border-border transition-all duration-200"
           >
             <Sparkles className="w-3 h-3" aria-hidden="true" />
             <span className="text-xs">Expand</span>
@@ -222,13 +227,13 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
                 key={key}
                 onClick={() => {
                   setLocalValue(val as string);
-                  onUpdate(val as string);
+                  onUpdate(field.id, val as string);
                   setExpanding(false);
                 }}
-                className="w-full text-left p-3 rounded-md bg-muted/50 border border-border hover:border-primary/40 hover:bg-primary/10 transition-all group relative focus:outline-none focus:ring-2 focus:ring-ring"
+                className="w-full text-left p-3 rounded-md bg-muted/50 border border-border hover:border-brand/40 hover:bg-brand/10 transition-all group relative focus:outline-none focus:ring-2 focus:ring-ring"
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-primary/80">{key}</span>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-brand/80">{key}</span>
                   <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                 </div>
                 <p className="text-sm text-muted-foreground group-hover:text-foreground line-clamp-2">{val as string}</p>
@@ -239,4 +244,5 @@ function FieldGroup({ field, initialValue, patterns, onUpdate, isExpanding, setE
       </AnimatePresence>
     </section>
   );
-}
+});
+FieldGroup.displayName = "FieldGroup";

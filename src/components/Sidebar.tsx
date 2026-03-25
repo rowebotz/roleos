@@ -12,10 +12,9 @@ export function Sidebar() {
   const resetProfile = useProfileStore(s => s.resetProfile);
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     const activeElement = document.activeElement;
-    const isInput = activeElement instanceof HTMLTextAreaElement || 
+    const isInput = activeElement instanceof HTMLTextAreaElement ||
                     activeElement instanceof HTMLInputElement;
     if (isInput) return;
-
     if (e.key === 'ArrowDown') {
       e.preventDefault();
       const currentIndex = ROLE_OS_SECTIONS.findIndex(s => s.id === activeSectionId);
@@ -35,8 +34,11 @@ export function Sidebar() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
   const totalFields = ROLE_OS_SECTIONS.reduce((acc, s) => acc + s.fields.length, 0);
-  const filledFields = Object.keys(profile).length;
-  const progressPercent = Math.round((filledFields / totalFields) * 100);
+  const filledFields = ROLE_OS_SECTIONS.reduce((acc, section) => {
+    const sectionFilledCount = section.fields.filter(f => !!profile[f.id]?.trim()).length;
+    return acc + sectionFilledCount;
+  }, 0);
+  const progressPercent = totalFields > 0 ? Math.round((filledFields / totalFields) * 100) : 0;
   return (
     <nav className="flex flex-col h-full border-r bg-sidebar backdrop-blur-xl w-64" aria-label="Taxonomy list">
       <div className="p-6 border-b border-border flex items-center justify-between">
@@ -46,7 +48,7 @@ export function Sidebar() {
       <ScrollArea className="flex-1">
         <div className="p-2 space-y-1" role="tablist" aria-orientation="vertical">
           {ROLE_OS_SECTIONS.map((section) => {
-            const isCompleted = section.fields.every(f => !!profile[f.id]);
+            const isCompleted = section.fields.every(f => !!profile[f.id]?.trim());
             const isActive = activeSectionId === section.id;
             return (
               <button
