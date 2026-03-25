@@ -21,7 +21,7 @@ const router = createBrowserRouter([
     element: <HomePage />,
     errorElement: <RouteErrorBoundary />,
   },
-]);
+], { basename: "/roleos" });
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
