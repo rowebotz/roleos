@@ -1,214 +1,78 @@
-import React, { useState, useEffect, useCallback, memo } from 'react';
+import React, { useState } from 'react';
 import { useProfileStore } from '@/store/useProfileStore';
-import { ROLE_OS_SECTIONS, Section, Field } from '@/data/schemas';
+import { ROLE_OS_SECTIONS } from '@/data/schemas';
 import { useContextDensity } from '@/hooks/useContextDensity';
 import { expandThought } from '@/data/expansionTemplates';
 import { Textarea } from '@/components/ui/textarea';
+import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-import { Sparkles, AlertTriangle, ChevronRight, History, X, CheckCircle2 } from 'lucide-react';
+import { Sparkles, AlertTriangle, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { IntroHero } from '@/components/IntroHero';
-import { useHotkeys } from 'react-hotkeys-hook';
 export function ContextEngine() {
   const activeId = useProfileStore(s => s.activeSectionId);
   const profile = useProfileStore(s => s.profile);
-  const hasDismissedIntro = useProfileStore(s => s.hasDismissedIntro);
-  const hasDismissedResumeBanner = useProfileStore(s => s.hasDismissedResumeBanner);
   const updateField = useProfileStore(s => s.updateField);
-  const dismissIntro = useProfileStore(s => s.dismissIntro);
-  const setDismissedResumeBanner = useProfileStore(s => s.setDismissedResumeBanner);
-  const setActiveSection = useProfileStore(s => s.setActiveSection);
   const section = ROLE_OS_SECTIONS.find(s => s.id === activeId);
   const [expandingField, setExpandingField] = useState<string | null>(null);
-  const profileSize = Object.keys(profile).length;
-  const totalFields = ROLE_OS_SECTIONS.reduce((acc, s) => acc + s.fields.length, 0);
-  const isProfilePartial = profileSize > 0 && profileSize < totalFields;
-  const showIntro = !hasDismissedIntro && profileSize === 0;
-  const showResumeBanner = isProfilePartial && !hasDismissedResumeBanner;
-  useHotkeys('esc', () => setExpandingField(null), { enableOnFormTags: true });
-  const handleResume = useCallback(() => {
-    const firstIncomplete = ROLE_OS_SECTIONS.find(s =>
-      s.fields.some(f => !profile[f.id])
-    );
-    if (firstIncomplete) {
-      setActiveSection(firstIncomplete.id);
-    }
-    setDismissedResumeBanner(true);
-  }, [profile, setActiveSection, setDismissedResumeBanner]);
-  const handleUpdate = useCallback((fieldId: string, val: string) => {
-    updateField(fieldId, val);
-  }, [updateField]);
   if (!section) return null;
   return (
-    <div className="max-w-2xl mx-auto space-y-10 py-10" id={`panel-${activeId}`} role="tabpanel" aria-labelledby={`tab-${activeId}`}>
-      <AnimatePresence>
-        {showIntro && <IntroHero onDismiss={dismissIntro} />}
-        {showResumeBanner && !showIntro && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, height: 0 }}
-            className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-brand to-[#4b5cd1] border border-white/20 shadow-glow text-white"
-            role="alert"
-          >
-            <div className="flex items-center gap-3">
-              <History className="w-4 h-4 text-white" aria-hidden="true" />
-              <span className="text-xs font-bold uppercase tracking-widest">Resume session?</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                size="sm"
-                onClick={handleResume}
-                className="h-7 px-3 text-[10px] bg-white/20 hover:bg-white/30 text-white border border-white/20 font-bold uppercase tracking-widest transition-colors"
-              >
-                Jump to task
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setDismissedResumeBanner(true)}
-                className="h-7 w-7 text-white/80 hover:text-white hover:bg-white/10"
-              >
-                <X className="w-4 h-4" />
-                <span className="sr-only">Dismiss banner</span>
-              </Button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <div className="max-w-2xl mx-auto space-y-10 py-10">
       <header className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">{section.title}</h1>
-        <p className="text-muted-foreground leading-relaxed">{section.description}</p>
+        <h2 className="text-3xl font-bold tracking-tight text-white">{section.title}</h2>
+        <p className="text-zinc-400 leading-relaxed">{section.description}</p>
       </header>
-      <div className="space-y-12 pb-20">
-        {section.fields.map((field, index) => (
-          <FieldGroup
-            key={field.id}
-            field={field}
-            initialValue={profile[field.id] || ''}
+      <div className="space-y-12">
+        {section.fields.map((field) => (
+          <FieldGroup 
+            key={field.id} 
+            field={field} 
+            value={profile[field.id] || ''} 
             patterns={section.lowSignalPatterns}
-            onUpdate={handleUpdate}
+            onUpdate={(val) => updateField(field.id, val)}
             isExpanding={expandingField === field.id}
-            setExpanding={(val: boolean) => setExpandingField(val ? field.id : null)}
-            isLast={index === section.fields.length - 1}
-            section={section}
+            setExpanding={(val) => setExpandingField(val ? field.id : null)}
           />
         ))}
       </div>
     </div>
   );
 }
-interface FieldGroupProps {
-  field: Field;
-  initialValue: string;
-  patterns: string[];
-  onUpdate: (fieldId: string, val: string) => void;
-  isExpanding: boolean;
-  setExpanding: (val: boolean) => void;
-  isLast: boolean;
-  section: Section;
-}
-const FieldGroup = memo(({ field, initialValue, patterns, onUpdate, isExpanding, setExpanding, isLast, section }: FieldGroupProps) => {
-  const [localValue, setLocalValue] = useState(initialValue);
-  const setActiveSection = useProfileStore(s => s.setActiveSection);
-  const [hasCelebrated, setHasCelebrated] = useState(false);
-  useEffect(() => {
-    setLocalValue(initialValue);
-  }, [initialValue]);
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (localValue !== initialValue) {
-        onUpdate(field.id, localValue);
-      }
-    }, 500);
-    return () => clearTimeout(timeoutId);
-  }, [localValue, onUpdate, field.id, initialValue]);
-  const { score, flags } = useContextDensity(localValue, patterns);
-  useEffect(() => {
-    if (score >= 70 && !hasCelebrated) {
-      setHasCelebrated(true);
-    } else if (score < 60) {
-      setHasCelebrated(false);
-    }
-  }, [score, hasCelebrated]);
-  const variations = expandThought(localValue);
-  const scoreColor = score > 70 ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" : score > 40 ? "bg-brand" : "bg-rose-500";
-  const handleEnter = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-      e.preventDefault();
-      if (isLast) {
-        const nextSecIndex = ROLE_OS_SECTIONS.findIndex(s => s.id === section.id) + 1;
-        if (nextSecIndex < ROLE_OS_SECTIONS.length) {
-          setActiveSection(ROLE_OS_SECTIONS[nextSecIndex].id);
-        }
-      } else {
-        const parent = (e.target as HTMLElement).closest('div.space-y-12');
-        const textareas = Array.from(parent?.querySelectorAll('textarea') || []);
-        const nextIdx = textareas.indexOf(e.target as HTMLTextAreaElement) + 1;
-        if (nextIdx < textareas.length) {
-          (textareas[nextIdx] as HTMLElement).focus();
-        }
-      }
-    }
-  };
+function FieldGroup({ field, value, patterns, onUpdate, isExpanding, setExpanding }: any) {
+  const { score, flags } = useContextDensity(value, patterns);
+  const variations = expandThought(value);
+  const scoreColor = score > 70 ? "bg-emerald-500" : score > 40 ? "bg-amber-500" : "bg-rose-500";
   return (
-    <section className="space-y-4" aria-labelledby={`label-${field.id}`}>
+    <div className="space-y-4">
       <div className="flex items-end justify-between">
-        <label id={`label-${field.id}`} className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{field.label}</label>
-        <div className="flex items-center gap-2" aria-live="polite">
-          <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-tighter">Signal: {score}%</span>
-          <div className="w-24 h-1 bg-muted/20 rounded-full overflow-hidden relative" role="progressbar" aria-valuenow={score} aria-valuemin={0} aria-valuemax={100}>
-            <motion.div
-              className={`h-full transition-colors duration-500 ${scoreColor}`}
-              initial={{ width: 0 }}
-              animate={{ width: `${score}%` }}
-              transition={{ type: "spring", stiffness: 100, damping: 20 }}
-            />
+        <label className="text-xs font-bold uppercase tracking-widest text-zinc-500">{field.label}</label>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-tighter">Context Density</span>
+          <div className="w-24 h-1 bg-zinc-800 rounded-full overflow-hidden">
+            <div className={`h-full transition-all duration-500 ${scoreColor}`} style={{ width: `${score}%` }} />
           </div>
         </div>
       </div>
       <div className="relative group">
         <Textarea
-          id={field.id}
-          aria-label={field.label}
           placeholder={field.placeholder}
-          value={localValue}
-          onChange={(e) => setLocalValue(e.target.value)}
-          onKeyDown={handleEnter}
-          className="min-h-[120px] bg-card border-border text-foreground placeholder:text-muted-foreground/80 group-hover:border-border/75 focus:ring-ring focus:ring-offset-2 resize-none transition-all duration-300 focus:border-primary/50"
+          value={value}
+          onChange={(e) => onUpdate(e.target.value)}
+          className="min-h-[120px] bg-zinc-900/50 border-zinc-800 text-zinc-200 placeholder:text-zinc-700 focus:ring-indigo-500/50 resize-none transition-all duration-300 group-hover:border-zinc-700"
         />
-        <AnimatePresence>
-          {score >= 70 && (
-            <motion.div
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0, opacity: 0 }}
-              className="absolute -top-2 -right-2 z-20"
-              role="status"
-            >
-              <div className="bg-emerald-500 rounded-full p-1 shadow-glow border border-emerald-400/50">
-                <CheckCircle2 className="w-4 h-4 text-emerald-50" />
-                <span className="sr-only">High signal density achieved</span>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
         <div className="absolute bottom-3 right-3 flex items-center gap-2">
           {flags.length > 0 && (
-            <div className="flex items-center gap-1 text-[10px] font-bold text-amber-500/80 bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20" role="alert">
-              <AlertTriangle className="w-3 h-3" aria-hidden="true" />
-              Low Signal Detected
+            <div className="flex items-center gap-1 text-[10px] font-bold text-amber-500/80 bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20">
+              <AlertTriangle className="w-3 h-3" />
+              Low Signal: {flags.slice(0, 2).join(', ')}
             </div>
           )}
           <Button
             variant="ghost"
             size="sm"
             onClick={() => setExpanding(!isExpanding)}
-            aria-expanded={isExpanding}
-            aria-controls={`variations-${field.id}`}
-            className="h-8 gap-2 bg-muted hover:bg-brand hover:text-white text-muted-foreground border-border transition-all duration-200"
+            className="h-8 gap-2 bg-zinc-800 hover:bg-indigo-600 text-zinc-300 hover:text-white border border-white/5 transition-all duration-200"
           >
-            <Sparkles className="w-3 h-3" aria-hidden="true" />
+            <Sparkles className="w-3 h-3" />
             <span className="text-xs">Expand</span>
           </Button>
         </div>
@@ -216,7 +80,6 @@ const FieldGroup = memo(({ field, initialValue, patterns, onUpdate, isExpanding,
       <AnimatePresence>
         {isExpanding && (
           <motion.div
-            id={`variations-${field.id}`}
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
@@ -226,23 +89,21 @@ const FieldGroup = memo(({ field, initialValue, patterns, onUpdate, isExpanding,
               <button
                 key={key}
                 onClick={() => {
-                  setLocalValue(val as string);
-                  onUpdate(field.id, val as string);
+                  onUpdate(val);
                   setExpanding(false);
                 }}
-                className="w-full text-left p-3 rounded-md bg-muted/50 border border-border hover:border-brand/40 hover:bg-brand/10 transition-all group relative focus:outline-none focus:ring-2 focus:ring-ring"
+                className="w-full text-left p-3 rounded-md bg-white/5 border border-white/5 hover:border-indigo-500/50 hover:bg-indigo-500/5 transition-all group relative"
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-brand/80">{key}</span>
-                  <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-indigo-400/80">{key}</span>
+                  <ChevronRight className="w-3 h-3 text-zinc-600 group-hover:translate-x-1 transition-transform" />
                 </div>
-                <p className="text-sm text-muted-foreground group-hover:text-foreground line-clamp-2">{val as string}</p>
+                <p className="text-sm text-zinc-400 group-hover:text-zinc-200 line-clamp-2">{val}</p>
               </button>
             ))}
           </motion.div>
         )}
       </AnimatePresence>
-    </section>
+    </div>
   );
-});
-FieldGroup.displayName = "FieldGroup";
+}

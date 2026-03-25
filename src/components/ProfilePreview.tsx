@@ -2,51 +2,42 @@ import React from 'react';
 import { useProfileStore } from '@/store/useProfileStore';
 import { ROLE_OS_SECTIONS } from '@/data/schemas';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Terminal, Cpu } from 'lucide-react';
+import { Terminal } from 'lucide-react';
 export function ProfilePreview() {
   const profile = useProfileStore(s => s.profile);
   return (
-    <div className="flex flex-col h-full w-full md:w-[450px] bg-sidebar md:border-l border-border" aria-label="Live Profile Preview">
-      <div className="p-6 border-b border-border flex items-center justify-between bg-sidebar/70 backdrop-blur-sm sticky top-0 z-10">
+    <div className="flex flex-col h-full bg-black/40 backdrop-blur-md border-l border-white/5 w-[450px]">
+      <div className="p-6 border-b border-white/5 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Terminal className="w-4 h-4 text-primary" aria-hidden="true" />
-          <h2 className="text-xs font-bold tracking-[0.2em] text-muted-foreground uppercase">Live Output</h2>
+          <Terminal className="w-4 h-4 text-indigo-500" />
+          <h2 className="text-sm font-bold tracking-widest text-zinc-400 uppercase">Live Output</h2>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" aria-hidden="true" />
-          <div className="px-2 py-0.5 rounded text-[10px] font-mono bg-primary/10 text-primary-foreground/80 border border-primary/30 tracking-widest">
-            STABLE_SYNC
-          </div>
+        <div className="px-2 py-0.5 rounded text-[10px] font-mono bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+          PROMPT_MODE
         </div>
       </div>
-      <ScrollArea className="flex-1 p-6 md:p-8">
-        <div className="space-y-12 font-mono text-xs leading-relaxed max-w-sm mx-auto pb-12">
-          <header className="text-center space-y-3">
-            <h2 className="text-xl font-bold tracking-tighter text-foreground">ROLE_OS_PROFILE_V1</h2>
-            <div className="flex items-center gap-2 justify-center" aria-hidden="true">
-              <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-border/30" />
-              <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest text-center">STRUCTURED_CONTEXT_FOR_LLMS</div>
-              <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-border/30" />
-            </div>
+      <ScrollArea className="flex-1 p-8">
+        <div className="space-y-10 font-mono text-xs leading-relaxed max-w-sm mx-auto">
+          <header className="text-center space-y-2">
+            <h1 className="text-xl font-bold tracking-tighter text-white">ROLE_OS_PROFILE_V1</h1>
+            <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-zinc-800 to-transparent" />
           </header>
           {ROLE_OS_SECTIONS.map((section) => {
             const hasData = section.fields.some(f => !!profile[f.id]);
             if (!hasData) return null;
             return (
               <section key={section.id} className="space-y-4">
-                <div className="flex items-center gap-4 text-primary/60">
-                  <h3 className="shrink-0 text-[10px] font-bold tracking-widest">
-                    [ {section.title.toUpperCase().replace(/\s+/g, '_')} ]
-                  </h3>
-                  <div className="h-[1px] flex-1 bg-current opacity-20" aria-hidden="true" />
+                <div className="flex items-center gap-4 text-indigo-500 opacity-60">
+                  <span className="shrink-0">[ {section.title.toUpperCase().replace(/\s+/g, '_')} ]</span>
+                  <div className="h-[1px] flex-1 bg-current" />
                 </div>
-                <div className="space-y-6 pl-4 border-l border-border/60 ml-1">
+                <div className="space-y-6 pl-4 border-l border-zinc-900">
                   {section.fields.map(field => profile[field.id] && (
-                    <div key={field.id} className="space-y-1.5">
-                      <h4 className="text-muted-foreground font-bold tracking-widest text-[9px] uppercase">
+                    <div key={field.id} className="space-y-1">
+                      <div className="text-zinc-600 font-bold tracking-tight text-[10px] uppercase">
                         {field.label}
-                      </h4>
-                      <p className="text-foreground leading-normal selection:bg-primary/20">
+                      </div>
+                      <p className="text-zinc-300 leading-normal selection:bg-indigo-500 selection:text-white">
                         {profile[field.id]}
                       </p>
                     </div>
@@ -56,25 +47,15 @@ export function ProfilePreview() {
             );
           })}
           {Object.keys(profile).length === 0 && (
-            <div className="h-64 flex flex-col items-center justify-center text-center space-y-6 px-4" role="status">
-              <div className="relative">
-                <div className="w-16 h-16 rounded-full border border-dashed border-border/60 flex items-center justify-center">
-                  <Cpu className="w-6 h-6 text-border" aria-hidden="true" />
-                </div>
-                <div className="absolute inset-0 w-16 h-16 rounded-full border border-primary/30 animate-ping [animation-duration:3s]" aria-hidden="true" />
+            <div className="h-64 flex flex-col items-center justify-center text-center space-y-4">
+              <div className="w-10 h-10 rounded-full border border-dashed border-zinc-800 flex items-center justify-center">
+                <div className="w-2 h-2 bg-zinc-800 rounded-full animate-ping" />
               </div>
-              <div className="space-y-2">
-                <p className="text-muted-foreground font-bold text-[10px] uppercase tracking-[0.2em]">Context Engine Offline</p>
-                <p className="text-muted-foreground italic text-[11px]">Align your communication and thought processes... <br/>Begin input to synthesize profile.</p>
-              </div>
+              <p className="text-zinc-600 italic">Synthesizing engine offline... <br/>Input required.</p>
             </div>
           )}
         </div>
       </ScrollArea>
-      <footer className="p-4 border-t border-border bg-sidebar/80 text-[9px] font-mono text-muted-foreground flex justify-between uppercase tracking-widest">
-        <span>Encoding: UTF-8</span>
-        <span>Version: 1.0.4-STABLE</span>
-      </footer>
     </div>
   );
 }

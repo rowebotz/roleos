@@ -1,138 +1,90 @@
-// Home page of the app.
-// Currently a demo placeholder "please wait" screen.
-// Replace this file with your actual app UI. Do not delete it to use some other file as homepage. Simply replace the entire contents of this file.
-
-import { useEffect, useMemo, useState } from 'react'
-import { Sparkles } from 'lucide-react'
-
-import { ThemeToggle } from '@/components/ThemeToggle'
-import { HAS_TEMPLATE_DEMO, TemplateDemo } from '@/components/TemplateDemo'
-import { Button } from '@/components/ui/button'
-import { Toaster, toast } from '@/components/ui/sonner'
-
-function formatDuration(ms: number): string {
-  const total = Math.max(0, Math.floor(ms / 1000))
-  const m = Math.floor(total / 60)
-  const s = total % 60
-  return `${m}:${s.toString().padStart(2, '0')}`
-}
-
+import React from 'react';
+import { Sidebar } from '@/components/Sidebar';
+import { ContextEngine } from '@/components/ContextEngine';
+import { ProfilePreview } from '@/components/ProfilePreview';
+import { ThemeToggle } from '@/components/ThemeToggle';
+import { ExportPanel } from '@/components/ExportPanel';
+import { Toaster } from '@/components/ui/sonner';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
+import { Menu, Terminal } from 'lucide-react';
 export function HomePage() {
-  const [coins, setCoins] = useState(0)
-  const [isRunning, setIsRunning] = useState(false)
-  const [startedAt, setStartedAt] = useState<number | null>(null)
-  const [elapsedMs, setElapsedMs] = useState(0)
-
-  useEffect(() => {
-    if (!isRunning || startedAt === null) return
-
-    const t = setInterval(() => {
-      setElapsedMs(Date.now() - startedAt)
-    }, 250)
-
-    return () => clearInterval(t)
-  }, [isRunning, startedAt])
-
-  const formatted = useMemo(() => formatDuration(elapsedMs), [elapsedMs])
-
-  const onPleaseWait = () => {
-    setCoins((c) => c + 1)
-
-    if (!isRunning) {
-      // Resume from the current elapsed time
-      setStartedAt(Date.now() - elapsedMs)
-      setIsRunning(true)
-      toast.success('Building your app…', {
-        description: "Hang tight — we're setting everything up.",
-      })
-      return
-    }
-
-    setIsRunning(false)
-    toast.info('Still working…', {
-      description: 'You can come back in a moment.',
-    })
-  }
-
-  const onReset = () => {
-    setCoins(0)
-    setIsRunning(false)
-    setStartedAt(null)
-    setElapsedMs(0)
-    toast('Reset complete')
-  }
-
-  const onAddCoin = () => {
-    setCoins((c) => c + 1)
-    toast('Coin added')
-  }
-
+  const isMobile = useIsMobile();
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-4 overflow-hidden relative">
-      <ThemeToggle />
-      <div className="absolute inset-0 bg-gradient-rainbow opacity-10 dark:opacity-20 pointer-events-none" />
-
-      <div className="text-center space-y-8 relative z-10 animate-fade-in w-full">
-        <div className="flex justify-center">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-primary flex items-center justify-center shadow-primary floating">
-            <Sparkles className="w-8 h-8 text-white rotating" />
+    <div className="h-screen w-full bg-zinc-950 flex flex-col overflow-hidden text-zinc-200 selection:bg-indigo-500/30">
+      {/* Global Header */}
+      <header className="h-14 border-b border-white/5 px-6 flex items-center justify-between bg-zinc-950/80 backdrop-blur-md z-30 shrink-0">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded bg-indigo-600 flex items-center justify-center shadow-[0_0_15px_-3px_rgba(79,70,229,0.5)]">
+              <Terminal className="w-4 h-4 text-white" />
+            </div>
+            <span className="font-display font-bold text-lg tracking-tighter text-white">RoleOS</span>
           </div>
+          {isMobile && (
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-zinc-500">
+                  <Menu className="w-5 h-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="p-0 bg-zinc-950 border-white/10 w-64">
+                <Sidebar />
+              </SheetContent>
+            </Sheet>
+          )}
         </div>
-
-        <div className="space-y-3">
-          <h1 className="text-5xl md:text-7xl font-display font-bold text-balance leading-tight">
-            Creating your <span className="text-gradient">app</span>
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground max-w-xl mx-auto text-pretty">
-            Your application would be ready soon.
-          </p>
+        <div className="flex items-center gap-4">
+          <ExportPanel />
+          <div className="h-4 w-[1px] bg-white/5" />
+          <ThemeToggle />
         </div>
-
-        {HAS_TEMPLATE_DEMO ? (
-          <div className="max-w-5xl mx-auto text-left">
-            <TemplateDemo />
-          </div>
-        ) : (
-          <>
-            <div className="flex justify-center gap-4">
-              <Button
-                size="lg"
-                onClick={onPleaseWait}
-                className="btn-gradient px-8 py-4 text-lg font-semibold hover:-translate-y-0.5 transition-all duration-200"
-                aria-live="polite"
-              >
-                Please Wait
-              </Button>
-            </div>
-
-            <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
-              <div>
-                Time elapsed:{' '}
-                <span className="font-medium tabular-nums text-foreground">{formatted}</span>
-              </div>
-              <div>
-                Coins:{' '}
-                <span className="font-medium tabular-nums text-foreground">{coins}</span>
-              </div>
-            </div>
-
-            <div className="flex justify-center gap-2">
-              <Button variant="outline" size="sm" onClick={onReset}>
-                Reset
-              </Button>
-              <Button variant="outline" size="sm" onClick={onAddCoin}>
-                Add Coin
-              </Button>
-            </div>
-          </>
+      </header>
+      {/* Main Workspace */}
+      <main className="flex-1 flex overflow-hidden">
+        {/* Left: Sidebar */}
+        {!isMobile && (
+          <aside className="shrink-0 h-full">
+            <Sidebar />
+          </aside>
         )}
-      </div>
-
-      <footer className="absolute bottom-8 text-center text-muted-foreground/80">
-        <p>Powered by Cloudflare</p>
-      </footer>
-
-      <Toaster richColors closeButton />
+        {/* Center: Context Engine */}
+        <section className="flex-1 h-full overflow-y-auto custom-scrollbar relative">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <ContextEngine />
+          </div>
+        </section>
+        {/* Right: Profile Preview */}
+        {!isMobile && (
+          <aside className="shrink-0 h-full">
+            <ProfilePreview />
+          </aside>
+        )}
+        {/* Mobile Preview FAB */}
+        {isMobile && (
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button 
+                className="fixed bottom-6 right-6 rounded-full w-14 h-14 shadow-2xl z-50 bg-indigo-600"
+                size="icon"
+              >
+                <Terminal className="w-6 h-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="bottom" className="h-[85vh] p-0 bg-zinc-950 border-white/10 rounded-t-3xl overflow-hidden">
+              <ProfilePreview />
+            </SheetContent>
+          </Sheet>
+        )}
+      </main>
+      <Toaster position="top-center" richColors theme="dark" />
+      <style dangerouslySetInnerHTML={{ __html: `
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #18181b; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #27272a; }
+      `}} />
     </div>
-  )
+  );
 }
