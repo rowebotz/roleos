@@ -25,7 +25,7 @@ export function ProfilePreview() {
             <h2 className="text-xl font-bold tracking-tighter text-foreground">ROLE_OS_PROFILE_V1</h2>
             <div className="flex items-center gap-2 justify-center" aria-hidden="true">
               <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent to-border/30" />
-              <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Sys_Context</div>
+              <div className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest text-center">STRUCTURED_CONTEXT_FOR_LLMS</div>
               <div className="h-[1px] flex-1 bg-gradient-to-l from-transparent to-border/30" />
             </div>
           </header>
@@ -65,7 +65,7 @@ export function ProfilePreview() {
               </div>
               <div className="space-y-2">
                 <p className="text-muted-foreground font-bold text-[10px] uppercase tracking-[0.2em]">Context Engine Offline</p>
-                <p className="text-muted-foreground italic text-[11px]">Awaiting system parameters... <br/>Begin input to synthesize profile.</p>
+                <p className="text-muted-foreground italic text-[11px]">Align your communication and thought processes... <br/>Begin input to synthesize profile.</p>
               </div>
             </div>
           )}

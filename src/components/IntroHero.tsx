@@ -33,9 +33,7 @@ export function IntroHero({ onDismiss }: IntroHeroProps) {
             Build Your Personal AI <span className="text-brand">Operating Profile</span>
           </h1>
           <p className="text-muted-foreground text-sm leading-relaxed max-w-xl">
-            RoleOS is a structured context engine designed to align LLMs with your specific thinking,
-            working, and communication protocols. It's not a personality quiz—it's a technical
-            specification for your AI interactions.
+            RoleOS is a structured context engine that helps align large language models (LLMs) with your communication style, work, and thought process. It gives AI systems richer context, clearer instructions, and more precise guidance on how to support you, then exports that profile into usable formats like Claude Skills, Gemini Gems, Custom GPTs, and more.
           </p>
           <div className="flex gap-4 pt-2">
             <Button onClick={onDismiss} className="btn-gradient bg-brand hover:bg-brand/90 px-6 h-10 text-xs uppercase tracking-widest font-bold">

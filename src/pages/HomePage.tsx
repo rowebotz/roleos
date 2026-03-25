@@ -32,7 +32,6 @@ export function HomePage() {
       }
     }
   }, [isHydrated, searchParams, savedShortcodes, importProfile]);
-
   const activeSectionId = useProfileStore(s => s.activeSectionId);
   useHotkeys('meta+b, ctrl+b', () => {
     const activeEl = document.activeElement as HTMLElement;
@@ -102,7 +101,7 @@ export function HomePage() {
                   <Terminal className="w-8 h-8 text-white" aria-hidden="true" />
                 </div>
                 <h2 className="text-xl font-bold">Ready to Deploy?</h2>
-                <p className="text-muted-foreground text-sm max-w-xs">Generate your optimized AI prompt or share your local snapshot.</p>
+                <p className="text-muted-foreground text-sm max-w-xs">Structured context engine for Claude Skills, Gemini Gems, Custom GPTs, and more.</p>
                 <ExportPanel />
               </div>
             )}

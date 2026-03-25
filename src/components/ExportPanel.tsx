@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useProfileStore } from '@/store/useProfileStore';
 import { ROLE_OS_SECTIONS } from '@/data/schemas';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Copy, Download, Share2, Link as LinkIcon, Sparkles, Terminal } from 'lucide-react';
@@ -51,6 +51,9 @@ export function ExportPanel() {
       <DialogContent className="sm:max-w-[700px] bg-background border-border text-foreground max-h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold tracking-tight">System Deployment Hub</DialogTitle>
+          <DialogDescription className="text-muted-foreground text-sm">
+            Export your structured context into optimized formats for Claude Skills, Gemini Gems, Custom GPTs, and more.
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-6 overflow-y-auto pr-2 custom-scrollbar">
           <section className="p-4 rounded-xl bg-brand/10 border border-brand/20 space-y-4">
@@ -88,10 +91,10 @@ export function ExportPanel() {
             </div>
             <Tabs defaultValue="claude" className="w-full">
               <TabsList className="bg-muted border border-border w-full justify-start h-auto p-1 mb-4 overflow-x-auto">
-                <TabsTrigger value="claude" className="data-[state=active]:bg-brand data-[state=active]:text-white">Claude</TabsTrigger>
-                <TabsTrigger value="chatgpt" className="data-[state=active]:bg-brand data-[state=active]:text-white">ChatGPT</TabsTrigger>
-                <TabsTrigger value="gemini" className="data-[state=active]:bg-brand data-[state=active]:text-white">Gemini</TabsTrigger>
-                <TabsTrigger value="json" className="data-[state=active]:bg-brand data-[state=active]:text-white">JSON</TabsTrigger>
+                <TabsTrigger value="claude" className="data-[state=active]:bg-brand data-[state=active]:text-white">Claude Skills</TabsTrigger>
+                <TabsTrigger value="chatgpt" className="data-[state=active]:bg-brand data-[state=active]:text-white">Custom GPTs</TabsTrigger>
+                <TabsTrigger value="gemini" className="data-[state=active]:bg-brand data-[state=active]:text-white">Gemini Gems</TabsTrigger>
+                <TabsTrigger value="json" className="data-[state=active]:bg-brand data-[state=active]:text-white">JSON Raw</TabsTrigger>
               </TabsList>
               {Object.entries(formats).map(([key, content]) => (
                 <TabsContent key={key} value={key} className="space-y-4 outline-none">
