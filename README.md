@@ -1,124 +1,127 @@
-# Cloudflare Workers React Template
+# RoleOS
 
-[![Deploy to Cloudflare][![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/rowebotz/roleos)]
+RoleOS is a structured context engine that helps align large language models (LLMs) with your communication style, work, and thought process. It gives AI systems richer context, clearer instructions, and more precise guidance on how to support you, then exports that profile into usable formats like Claude Skills, Gemini Gems, Custom GPTs, and more.
 
-A production-ready full-stack starter template for Cloudflare Workers with React frontend, Hono backend, and Durable Objects for persistent state management. Includes a demo chat application with users, chat boards, and real-time messaging.
+## Features
 
-## 🚀 Features
+- **Full-stack architecture**: React + Vite frontend with TanStack Query and a Hono-powered API backend
+- **Durable Objects**: Per-entity storage (users, chats) with automatic indexing and pagination
+- **Modern UI**: shadcn/ui components, Tailwind CSS, and dark mode support
+- **Type-safe**: End-to-end TypeScript with shared types across frontend and backend
+- **Real-time demo**: Users, chat boards, and threaded messages with full CRUD operations
+- **Responsive design**: Mobile-first layout with optional sidebar
+- **Production-ready**: Error boundaries, logging, CORS handling, and health checks
+- **Bun-powered**: Fast installs and dev server
 
-- **Full-Stack Architecture**: React + Vite frontend with TanStack Query, Hono-powered Workers API.
-- **Durable Objects**: Per-entity storage (users, chats) with automatic indexing and pagination.
-- **Modern UI**: shadcn/ui components, Tailwind CSS, dark mode support.
-- **Type-Safe**: End-to-end TypeScript with shared types.
-- **Real-Time Demo**: Users, chat boards, threaded messages with CRUD operations.
-- **Responsive Design**: Mobile-first, sidebar layout option.
-- **Production-Ready**: Error boundaries, logging, CORS, health checks.
-- **Bun-Powered**: Fast installs and dev server.
+## Tech stack
 
-## 🛠️ Tech Stack
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, TanStack Query, React Router |
+| Backend | Hono, Durable Objects |
+| Styling | Tailwind CSS, shadcn/ui, Lucide Icons |
+| Data | Durable Objects (per-entity), global KV-like store, indexed pagination |
+| Tooling | Bun, Vite, Wrangler, TypeScript, ESLint |
 
-| Frontend | Backend | Styling | Data | Tools |
-|----------|---------|---------|------|-------|
-| React 18 | Hono | Tailwind CSS | Durable Objects | Bun, Vite, Wrangler |
-| TanStack Query | Cloudflare Workers | shadcn/ui | Global KV-like storage | TypeScript |
-| React Router | Durable Objects | Lucide Icons | Indexed pagination | ESLint |
+## Prerequisites
 
-## 🚀 Quick Start
+- [Bun](https://bun.sh) — `curl -fsSL https://bun.sh/install | bash`
+- [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/) — `bunx wrangler@latest init` or install globally
+- A Workers-compatible account (free tier is sufficient)
 
-### Prerequisites
+## Quick start
 
-- [Bun](https://bun.sh/) installed (`curl -fsSL https://bun.sh/install | bash`)
-- [Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/install-and-update/) (`bunx wrangler@latest init` or global install)
-- Cloudflare account (free tier sufficient)
-
-### Installation
-
+**Install dependencies:**
 ```bash
 bun install
 ```
 
-### Development
-
-Start the dev server (frontend + Workers proxy):
-
+**Start the dev server** (frontend + Workers proxy):
 ```bash
 bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) (or `${PORT:-3000}`).
 
-Generate Worker types:
-
+**Generate Worker types:**
 ```bash
 bun run cf-typegen
 ```
 
-### Build & Preview
-
+**Build and preview:**
 ```bash
 bun run build
 bun run preview
 ```
 
-## 🌐 API Endpoints
+## API reference
 
-All endpoints under `/api/` with JSON responses `{ success: boolean; data?: T; error?: string }`.
+All endpoints are under `/api/` and return JSON in the shape `{ success: boolean; data?: T; error?: string }`.
 
-- `GET /api/health` - Health check
-- `GET/POST /api/users` - List/create users (supports `?cursor` & `?limit`)
-- `DELETE /api/users/:id`, `POST /api/users/deleteMany`
-- `GET/POST /api/chats` - List/create chats
-- `GET/POST /api/chats/:chatId/messages` - List/send messages
-- `DELETE /api/chats/:id`, `POST /api/chats/deleteMany`
-- `POST /api/client-errors` - Client error reporting
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/api/health` | Health check |
+| `GET` | `/api/users` | List users (supports `?cursor` and `?limit`) |
+| `POST` | `/api/users` | Create a user |
+| `DELETE` | `/api/users/:id` | Delete a user |
+| `POST` | `/api/users/deleteMany` | Bulk delete users |
+| `GET` | `/api/chats` | List chats |
+| `POST` | `/api/chats` | Create a chat |
+| `GET` | `/api/chats/:chatId/messages` | List messages in a chat |
+| `POST` | `/api/chats/:chatId/messages` | Send a message |
+| `DELETE` | `/api/chats/:id` | Delete a chat |
+| `POST` | `/api/chats/deleteMany` | Bulk delete chats |
+| `POST` | `/api/client-errors` | Report a client-side error |
 
-Data auto-seeded on first request. Uses `crypto.randomUUID()` for IDs.
+Data is auto-seeded on first request. IDs use `crypto.randomUUID()`.
 
-## ☁️ Deployment
+## Deployment
 
-1. Login to Cloudflare:
-   ```bash
-   bunx wrangler@latest login
-   ```
+1. Log in via Wrangler:
+```bash
+bunx wrangler@latest login
+```
 
-2. Configure `wrangler.jsonc` with your account ID if needed.
+2. If needed, update `wrangler.jsonc` with your account ID.
 
 3. Deploy:
-   ```bash
-   bun run deploy
-   ```
+```bash
+bun run deploy
+```
 
 Your app will be live at `https://<project>.workers.dev`.
 
-[![Deploy to Cloudflare][![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/rowebotz/roleos)]
+> **Note:** Durable Objects use SQLite storage. Migrations run automatically on first deploy.
 
-**Note**: Durable Objects use SQLite storage; first deploy runs migrations automatically.
+## Development guidelines
 
-## 🧑‍💻 Development Guidelines
+| Area | Where to edit |
+|---|---|
+| Frontend pages | `src/pages/HomePage.tsx` |
+| Routing | `src/main.tsx` |
+| Backend routes | `worker/user-routes.ts` (auto-reloads in dev) |
+| Entities | Extend `IndexedEntity` in `worker/entities.ts` |
+| Shared types | `shared/types.ts` |
+| Styles | `tailwind.config.js` |
+| Linting | `bun run lint` |
 
-- **Frontend**: Edit `src/pages/HomePage.tsx` or add routes in `src/main.tsx`.
-- **Backend**: Add routes in `worker/user-routes.ts` (auto-reloads in dev).
-- **Entities**: Extend `IndexedEntity` in `worker/entities.ts`.
-- **Shared Types**: `shared/types.ts`.
-- **Styles**: Tailwind config in `tailwind.config.js`.
-- **Lint**: `bun run lint`.
+Hot reload is enabled for both the frontend and Worker routes.
 
-Hot-reload works for both frontend and Worker routes.
+## Documentation
 
-## 📚 Documentation
+- [Durable Objects guide](https://developers.cloudflare.com/durable-objects/)
+- [Hono docs](https://hono.dev)
+- [shadcn/ui](https://ui.shadcn.com)
+- [TanStack Query](https://tanstack.com/query)
+- [Bun docs](https://bun.sh/docs)
 
-- [Cloudflare Workers Docs](https://developers.cloudflare.com/workers/)
-- [Durable Objects Guide](https://developers.cloudflare.com/durable-objects/)
-- [Hono Docs](https://hono.dev/)
-- [shadcn/ui](https://ui.shadcn.com/)
+## Contributing
 
-## 🤝 Contributing
+1. Fork and clone the repo
+2. Run `bun install`
+3. Run `bun dev`
+4. Submit a PR
 
-1. Fork & clone
-2. `bun install`
-3. `bun dev`
-4. Submit PR
+## License
 
-## 📄 License
-
-MIT License - see [LICENSE](LICENSE) (or add one).
+MIT — see `LICENSE`.
