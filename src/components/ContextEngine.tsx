@@ -41,22 +41,31 @@ export function ContextEngine() {
       <AnimatePresence>
         {showIntro && <IntroHero onDismiss={dismissIntro} />}
         {showResumeBanner && !showIntro && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, height: 0 }}
-              className="flex items-center justify-between p-3 rounded-lg bg-primary/10 border border-primary/30 text-primary-foreground"
-              role="alert"
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, height: 0 }}
+            className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-600 border border-white/20 shadow-glow text-white"
+            role="alert"
           >
             <div className="flex items-center gap-3">
-              <History className="w-4 h-4" aria-hidden="true" />
+              <History className="w-4 h-4 text-white" aria-hidden="true" />
               <span className="text-xs font-bold uppercase tracking-widest">Resume session?</span>
             </div>
             <div className="flex items-center gap-2">
-              <Button size="sm" onClick={handleResume} className="h-7 px-3 text-[10px] bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-widest">
+              <Button 
+                size="sm" 
+                onClick={handleResume} 
+                className="h-7 px-3 text-[10px] bg-white/20 hover:bg-white/30 text-white border border-white/20 font-bold uppercase tracking-widest transition-colors"
+              >
                 Jump to task
               </Button>
-              <Button variant="ghost" size="icon" onClick={() => setDismissedResumeBanner(true)} className="h-7 w-7 hover:bg-primary/20">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={() => setDismissedResumeBanner(true)} 
+                className="h-7 w-7 text-white/80 hover:text-white hover:bg-white/10"
+              >
                 <X className="w-4 h-4" />
                 <span className="sr-only">Dismiss banner</span>
               </Button>
