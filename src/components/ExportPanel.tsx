@@ -4,7 +4,7 @@ import { ROLE_OS_SECTIONS } from '@/data/schemas';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Copy, Download, Share2, Link as LinkIcon, Sparkles } from 'lucide-react';
+import { Copy, Download, Share2, Link as LinkIcon, Sparkles, Terminal } from 'lucide-react';
 import { toast } from 'sonner';
 export function ExportPanel() {
   const profile = useProfileStore(s => s.profile);
@@ -62,9 +62,9 @@ export function ExportPanel() {
               <Sparkles className="w-3 h-3 text-indigo-500" />
             </div>
             {!shortcode ? (
-              <Button 
+              <Button
                 onClick={handleGenerateLink}
-                variant="outline" 
+                variant="outline"
                 className="w-full border-indigo-500/20 bg-indigo-500/10 text-indigo-300 hover:bg-indigo-500/20"
               >
                 Generate Snapshot Link
