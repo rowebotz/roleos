@@ -40,15 +40,15 @@ export function IntroHero({ onDismiss }: IntroHeroProps) {
       <div className="px-8 pt-8 pb-6 border-b border-border">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/10 border border-brand/20 text-brand text-xs font-bold uppercase tracking-widest">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/10 border border-brand/20 text-brand text-xs font-bold tracking-widest">
               <Sparkles className="h-3 w-3" />
               Welcome to RoleOS
             </div>
             <h1 className="text-2xl font-display font-bold tracking-tight text-foreground">
-              Build your personal AI profile in {totalFields} fields
+              Build your personal AI profile in under 10 minutes
             </h1>
             <p className="text-muted-foreground text-sm leading-relaxed max-w-2xl">
-              RoleOS turns your skills, style, and context into a structured profile that makes any AI — Claude, ChatGPT, Gemini — work the way <em>you</em> think. Fill the sections on the left, then export to your preferred platform.
+              RoleOS turns your skills, style, and context into a structured profile so AI tools including Claude, ChatGPT, and Gemini work the way you think. Fill out the sections on the left. Then export to your preferred platform.
             </p>
           </div>
           <Button
