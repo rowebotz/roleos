@@ -5,11 +5,13 @@ import { useProfileStore } from '@/store/useProfileStore';
 import { CheckCircle2, Circle, Settings2 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ResetConfirmDialog } from './ResetConfirmDialog';
+
 export function Sidebar() {
   const activeSectionId = useProfileStore(s => s.activeSectionId);
   const profile = useProfileStore(s => s.profile);
   const setActiveSection = useProfileStore(s => s.setActiveSection);
   const resetProfile = useProfileStore(s => s.resetProfile);
+
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     const activeElement = document.activeElement;
     const isInput = activeElement instanceof HTMLTextAreaElement ||
@@ -29,27 +31,34 @@ export function Sidebar() {
       document.getElementById(`tab-${ROLE_OS_SECTIONS[prevIndex].id}`)?.focus();
     }
   }, [activeSectionId, setActiveSection]);
+
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
+
   const totalFields = ROLE_OS_SECTIONS.reduce((acc, s) => acc + s.fields.length, 0);
   const filledFields = ROLE_OS_SECTIONS.reduce((acc, section) => {
     const sectionFilledCount = section.fields.filter(f => !!profile[f.id]?.trim()).length;
     return acc + sectionFilledCount;
   }, 0);
   const progressPercent = totalFields > 0 ? Math.round((filledFields / totalFields) * 100) : 0;
+
   return (
     <nav className="flex flex-col h-full w-full md:w-64 md:border-r border-border bg-sidebar backdrop-blur-xl" aria-label="Taxonomy list">
       <div className="p-6 border-b border-border flex items-center justify-between">
-        <h2 className="text-sm font-bold tracking-widest text-muted-foreground uppercase">Taxonomies</h2>
+        <h2 className="text-sm font-bold tracking-widest text-muted-foreground uppercase">Sections</h2>
         <Settings2 className="w-3 h-3 text-muted-foreground" aria-hidden="true" />
       </div>
       <ScrollArea className="flex-1">
         <div className="p-2 space-y-1" role="tablist" aria-orientation="vertical">
           {ROLE_OS_SECTIONS.map((section) => {
-            const isCompleted = section.fields.every(f => !!profile[f.id]?.trim());
+            const filledCount = section.fields.filter(f => !!profile[f.id]?.trim()).length;
+            const totalCount = section.fields.length;
+            const isCompleted = filledCount === totalCount;
+            const isPartial = filledCount > 0 && filledCount < totalCount;
             const isActive = activeSectionId === section.id;
+
             return (
               <button
                 key={section.id}
@@ -67,11 +76,18 @@ export function Sidebar() {
                 )}
               >
                 {isCompleted ? (
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500" aria-label="Completed" />
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" aria-label="Completed" />
+                ) : isPartial ? (
+                  <div className="w-4 h-4 shrink-0 relative flex items-center justify-center" aria-label="In progress">
+                    <Circle className="w-4 h-4 text-amber-400" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                    </div>
+                  </div>
                 ) : (
-                  <Circle className="w-4 h-4 opacity-20" aria-hidden="true" />
+                  <Circle className="w-4 h-4 opacity-20 shrink-0" aria-hidden="true" />
                 )}
-                <span className="truncate">{section.title}</span>
+                <span className="truncate flex-1">{section.title}</span>
                 {isActive && (
                   <div className="ml-auto w-1 h-4 bg-sidebar-primary-foreground/30 rounded-full animate-pulse" aria-hidden="true" />
                 )}
@@ -83,17 +99,38 @@ export function Sidebar() {
       <div className="p-4 border-t border-border bg-sidebar/70 space-y-4">
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">System Signal</span>
+            <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold">Profile Completion</span>
             <span className="text-[10px] font-mono text-brand font-bold" aria-live="polite">
-              {progressPercent}%
+              {filledFields}/{totalFields} filled
             </span>
           </div>
-          <div className="h-1 bg-muted rounded-full overflow-hidden" role="progressbar" aria-valuenow={progressPercent} aria-valuemin={0} aria-valuemax={100} aria-label="Overall profile completion">
+          <div
+            className="h-2 bg-muted rounded-full overflow-hidden"
+            role="progressbar"
+            aria-valuenow={progressPercent}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label="Overall profile completion"
+          >
             <div
-              className="h-full bg-brand transition-all duration-500 shadow-[0_0_8px_rgba(48,67,180,0.5)]"
+              className={cn(
+                "h-full transition-all duration-500",
+                progressPercent === 100
+                  ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
+                  : progressPercent > 50
+                  ? "bg-brand shadow-[0_0_8px_rgba(48,67,180,0.5)]"
+                  : "bg-brand/70"
+              )}
               style={{ width: `${progressPercent}%` }}
             />
           </div>
+          <p className="text-[10px] text-muted-foreground mt-1">
+            {progressPercent === 0
+              ? "Start filling sections to build your profile"
+              : progressPercent === 100
+              ? "Profile complete — ready to deploy!"
+              : `${progressPercent}% complete`}
+          </p>
         </div>
         <ResetConfirmDialog onConfirm={resetProfile} />
       </div>
