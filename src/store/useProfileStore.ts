@@ -23,7 +23,7 @@ export const useProfileStore = create<ProfileState>()(
     (set) => ({
       profile: {},
       savedShortcodes: {},
-      activeSectionId: "professional-identity",
+      activeSectionId: "identity",
       activeMobileView: 'engine',
       isHydrated: false,
       hasDismissedIntro: false,
@@ -41,7 +41,7 @@ export const useProfileStore = create<ProfileState>()(
         profile: {},
         hasDismissedIntro: false,
         hasDismissedResumeBanner: false,
-        activeSectionId: "professional-identity",
+        activeSectionId: "identity",
         activeMobileView: 'engine'
       }),
       importProfile: (data) => set({ profile: data }),

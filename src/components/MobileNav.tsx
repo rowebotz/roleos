@@ -1,16 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Layers, Edit3, Terminal, Share2 } from 'lucide-react';
+import { Layers, Edit3, FileText, FileDown } from 'lucide-react';
 import { useProfileStore } from '@/store/useProfileStore';
 import { cn } from '@/lib/utils';
 export function MobileNav() {
   const activeView = useProfileStore(s => s.activeMobileView);
   const setView = useProfileStore(s => s.setMobileView);
   const tabs = [
-    { id: 'sidebar', label: 'Taxonomy', icon: Layers, description: 'Navigate sections' },
-    { id: 'engine', label: 'Engine', icon: Edit3, description: 'Edit context' },
-    { id: 'preview', label: 'Output', icon: Terminal, description: 'View profile' },
-    { id: 'export', label: 'Deploy', icon: Share2, description: 'Export options' },
+    { id: 'sidebar', label: 'Sections', icon: Layers, description: 'Navigate sections' },
+    { id: 'engine', label: 'Edit', icon: Edit3, description: 'Edit your profile' },
+    { id: 'preview', label: 'Preview', icon: FileText, description: 'View profile' },
+    { id: 'export', label: 'Export', icon: FileDown, description: 'Export options' },
   ] as const;
   return (
     <nav className="fixed bottom-4 left-4 right-4 h-16 bg-card/80 backdrop-blur-xl border border-border rounded-2xl flex items-center justify-around px-2 z-50 shadow-2xl overflow-hidden" role="navigation" aria-label="Mobile workspace navigation">

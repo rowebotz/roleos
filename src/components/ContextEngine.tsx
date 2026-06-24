@@ -10,25 +10,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { IntroHero } from '@/components/IntroHero';
 import { useHotkeys } from 'react-hotkeys-hook';
 
-// Why-this-matters descriptions for each section — gives users context on how the AI uses each field
-const SECTION_WHY: Record<string, string> = {
-  "professional-identity": "Helps AI address you at the right level of expertise and use accurate job-specific terminology.",
-  "target-audience": "Lets AI tailor tone, vocabulary, and examples to the people you serve.",
-  "value-proposition": "Gives AI a north star so responses stay focused on outcomes that matter to you.",
-  "standard-workflows": "Lets AI follow your actual process rather than suggesting generic steps.",
-  "success-metrics": "Helps AI know when to celebrate wins and flag risks based on your real benchmarks.",
-  "collaboration-style": "Teaches AI how you prefer to communicate so it mirrors your protocols.",
-  "knowledge-base": "Prevents AI from over-explaining basics you already know deeply.",
-  "core-tools": "Lets AI generate code and suggestions in the exact tools you use, not alternatives.",
-  "philosophical-alignment": "Anchors AI recommendations to your values and avoids suggestions that conflict with them.",
-  "expertise-credentials": "Gives AI concrete proof of your credibility to use in bios, pitches, and summaries.",
-  "unfair-advantage": "Helps AI amplify what makes you genuinely different rather than giving generic advice.",
-  "voice-tone": "Ensures every AI-generated draft sounds like you, not a generic assistant.",
-  "decision-rules": "Lets AI pre-filter options and recommendations according to your logic.",
-  "constraints": "Prevents AI from suggesting anything that falls outside your hard limits.",
-  "output-preferences": "Ensures AI delivers results in the exact format you can immediately use.",
-};
-
 export function ContextEngine() {
   const activeId = useProfileStore(s => s.activeSectionId);
   const profile = useProfileStore(s => s.profile);
@@ -39,7 +20,8 @@ export function ContextEngine() {
   const setDismissedResumeBanner = useProfileStore(s => s.setDismissedResumeBanner);
   const setActiveSection = useProfileStore(s => s.setActiveSection);
 
-  const section = ROLE_OS_SECTIONS.find(s => s.id === activeId);
+  // Fall back to the first section if a stale/unknown id is persisted (e.g. after a schema update).
+  const section = ROLE_OS_SECTIONS.find(s => s.id === activeId) ?? ROLE_OS_SECTIONS[0];
   const [expandingField, setExpandingField] = useState<string | null>(null);
 
   const profileSize = Object.keys(profile).length;
@@ -66,7 +48,7 @@ export function ContextEngine() {
 
   if (!section) return null;
 
-  const sectionWhy = SECTION_WHY[activeId];
+  const sectionWhy = section.why;
 
   return (
     <div className="max-w-2xl mx-auto space-y-10 py-10" id={`panel-${activeId}`} role="tabpanel" aria-labelledby={`tab-${activeId}`}>
@@ -262,7 +244,7 @@ const FieldGroup = memo(({ field, initialValue, patterns, onUpdate, isExpanding,
             onClick={() => setExpanding(!isExpanding)}
             aria-expanded={isExpanding}
             aria-controls={`variations-${field.id}`}
-            title={hasInput ? "AI will rewrite this in 3 styles — clear, technical, and persuasive. Click to apply one." : "Type something first, then AI will offer rewrite suggestions."}
+            title={hasInput ? "Get 3 rewrites — clearer, more specific, and more confident. Click one to apply it." : "Type something first, then we'll offer rewrite suggestions."}
             className="h-8 gap-2 bg-muted hover:bg-brand hover:text-white text-muted-foreground border-border transition-all duration-200"
           >
             <Sparkles className="w-3 h-3" aria-hidden="true" />

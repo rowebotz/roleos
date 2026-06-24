@@ -1,15 +1,17 @@
-export function expandThought(input: string): { clear: string; technical: string; persuasive: string } {
+export function expandThought(input: string): { clearer: string; specific: string; confident: string } {
   const trimmed = input.trim();
   if (!trimmed) {
     return {
-      clear: "Please provide input to expand.",
-      technical: "Awaiting valid string buffer for processing.",
-      persuasive: "Your unique insights deserve a more powerful expression."
+      clearer: "Add a few words first, and we'll offer rewrites here.",
+      specific: "Add a few words first, and we'll offer rewrites here.",
+      confident: "Add a few words first, and we'll offer rewrites here."
     };
   }
+  // Strip a trailing period so the rewrites read cleanly.
+  const core = trimmed.replace(/\.+$/, "");
   return {
-    clear: `Focusing on the core objective: ${trimmed}. This ensures a streamlined approach to the goal while removing ambiguity for all stakeholders.`,
-    technical: `Implementing high-fidelity strategies for: ${trimmed}. This leverages modular design patterns and optimized protocols to ensure maximum system throughput and scalability.`,
-    persuasive: `Unlock unparalleled value by mastering: ${trimmed}. This approach doesn't just solve a problem—it establishes a new industry benchmark for excellence and efficiency.`
+    clearer: `${core} — in plain terms, so anyone can follow it.`,
+    specific: `${core}, with concrete details: who it's for, what changes, and how you'd know it worked.`,
+    confident: `${core}. This is a core strength, and it consistently delivers results.`
   };
 }

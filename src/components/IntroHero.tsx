@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { X, ArrowRight, Sparkles, Share2, Download, Layers } from 'lucide-react';
+import { X, ArrowRight, Sparkles, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ROLE_OS_SECTIONS } from '@/data/schemas';
 
@@ -11,18 +11,18 @@ interface IntroHeroProps {
 const STEPS = [
   {
     number: "1",
-    title: "Fill your profile",
-    desc: "Work through each section on the left — the more context you add, the better your AI will know you.",
+    title: "Fill in your profile",
+    desc: "Work through the short sections on the left. The more you add, the better any AI tool understands you.",
   },
   {
     number: "2",
-    title: "AI refines your input",
-    desc: "Use the ✦ Rewrite button on any field to get clearer, stronger phrasing instantly.",
+    title: "Sharpen your answers",
+    desc: "Hit ✦ Rewrite on any field to get clearer, more specific phrasing in one click.",
   },
   {
     number: "3",
-    title: "Export to your AI tool",
-    desc: "Click Deploy Profile to copy your profile as a Claude Skill, Custom GPT, Gemini Gem, or raw JSON.",
+    title: "Export as a skill",
+    desc: "Click Export to download a ready-to-upload skill file or system prompt for Claude, ChatGPT, Gemini, and more.",
   },
 ];
 
@@ -45,10 +45,10 @@ export function IntroHero({ onDismiss }: IntroHeroProps) {
               Welcome to RoleOS
             </div>
             <h1 className="text-2xl font-display font-bold tracking-tight text-foreground">
-              Build your personal AI profile in under 10 minutes
+              Build your AI profile in under 10 minutes
             </h1>
             <p className="text-muted-foreground text-sm leading-relaxed max-w-2xl">
-              RoleOS turns your skills, style, and context into a structured profile so AI tools including Claude, ChatGPT, and Gemini work the way you think. Fill out the sections on the left. Then export to your preferred platform.
+              Whatever your line of work, RoleOS turns your skills, style, and context into a structured profile — then exports it as a skill or system prompt so Claude, ChatGPT, Gemini, and other tools work the way you do. Fill out the sections on the left to start.
             </p>
           </div>
           <Button
@@ -85,8 +85,8 @@ export function IntroHero({ onDismiss }: IntroHeroProps) {
       <div className="px-8 pb-6 flex flex-col sm:flex-row items-start sm:items-center gap-4">
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <Download className="w-3.5 h-3.5 text-brand" />
-          <span>Exports to:</span>
-          {["Claude Skills", "Custom GPTs", "Gemini Gems", "JSON"].map((fmt) => (
+          <span>Exports as:</span>
+          {["Skill (SKILL.md)", "System Prompt", "Markdown", "JSON"].map((fmt) => (
             <span key={fmt} className="px-2 py-0.5 rounded bg-muted text-muted-foreground text-[11px] font-medium border border-border">
               {fmt}
             </span>

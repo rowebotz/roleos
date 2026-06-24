@@ -1,8 +1,8 @@
 # RoleOS
 
-**Build your personal AI operating profile.**
+**Build your AI profile. Export it as a skill.**
 
-RoleOS is a structured context engine that helps align large language models (LLMs) with your communication style, work, and thought process. Fill out your profile across key taxonomies, then export it directly into Claude Skills, Gemini Gems, Custom GPTs, and more.
+RoleOS helps anyone — in any line of work — turn how they work, think, and communicate into a structured profile. Fill out a handful of short sections, then export it as a ready-to-upload **skill file** or **system prompt** for Claude, ChatGPT, Gemini, Copilot, and other AI tools.
 
 🔗 **[Try it live →](https://rowebotz.github.io/roleos/)**
 
@@ -10,29 +10,27 @@ RoleOS is a structured context engine that helps align large language models (LL
 
 ## What it does
 
-Most people use AI with zero context. RoleOS fixes that by giving you a structured way to define:
+Most people use AI with zero context, so it answers like it's talking to a stranger. RoleOS fixes that by giving you a simple way to define:
 
-- Your professional identity and role
-- How you think and communicate
-- Your workflows, tools, and constraints
-- Your voice, tone, and output preferences
+- Your role, audience, and the outcomes you care about
+- How you work and what you know
+- Your voice, principles, and boundaries
 
-Once filled out, the **System Deployment Hub** exports your profile into ready-to-use formats for any major AI platform.
+Once filled out, the **Export** panel turns your profile into formats you can drop into any major AI tool.
 
 ## Export formats
 
-- **Claude Skills** — paste directly into a Claude Project
-- **Custom GPTs** — drop into the GPT builder system prompt
-- **Gemini Gems** — configure your Gemini persona
-- **JSON Raw** — for custom integrations
+- **Skill (`SKILL.md`)** — a valid Agent Skill file (YAML frontmatter + Markdown) you can upload to Claude and other platforms that accept skills
+- **System Prompt** — paste into ChatGPT, Gemini, Copilot, Okta AI, or any assistant's instructions field
+- **Markdown** — your plain profile for docs or Projects
+- **JSON** — raw field data for custom integrations
 
 ## How to use it
 
 1. Visit [rowebotz.github.io/roleos](https://rowebotz.github.io/roleos/)
-2. Click **Initialize System**
-3. Work through the taxonomy sections in the left sidebar
-4. Click **Deploy Profile** to open the export panel
-5. Choose your platform and download or copy your profile
+2. Work through the short sections in the left sidebar
+3. Use **✦ Rewrite** on any field to sharpen your wording
+4. Click **Export Skill** and download or copy the format you need
 
 No account required. All data is stored locally in your browser.
 

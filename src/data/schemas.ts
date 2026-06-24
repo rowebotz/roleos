@@ -7,144 +7,97 @@ export interface Section {
   id: string;
   title: string;
   description: string;
+  /** Plain-language note on how an AI uses this section. */
+  why: string;
   fields: Field[];
   lowSignalPatterns: string[];
 }
 export const ROLE_OS_SECTIONS: Section[] = [
   {
-    id: "professional-identity",
-    title: "Professional Identity",
-    description: "Define your core role, seniority, and unique professional moniker.",
+    id: "identity",
+    title: "Your Role",
+    description: "Who you are and what you do.",
+    why: "Helps the AI speak to you at the right level and use the language of your field.",
     fields: [
-      { id: "role", label: "Primary Role", placeholder: "e.g., Senior Full-Stack Engineer & Architect" },
-      { id: "specialization", label: "Core Specialization", placeholder: "e.g., Distributed Systems and React Performance" }
+      { id: "role", label: "Role", placeholder: "e.g., Marketing manager, family lawyer, high-school science teacher, freelance designer" },
+      { id: "specialization", label: "Focus area", placeholder: "e.g., B2B email campaigns, estate planning, biology curriculum, brand identity" },
+      { id: "credentials", label: "Experience & credentials", placeholder: "e.g., 10 years in the field, CFP certified, published author, led a team of 12" }
     ],
     lowSignalPatterns: ["professional", "hardworking", "expert", "good"]
   },
   {
-    id: "target-audience",
-    title: "Target Audience",
-    description: "Who are you building or communicating for?",
+    id: "audience",
+    title: "Who You Serve",
+    description: "The people you work with, help, or communicate for.",
+    why: "Lets the AI tailor tone, vocabulary, and examples to the right people.",
     fields: [
-      { id: "audience", label: "Primary Audience", placeholder: "e.g., VC-backed startup founders and technical leads" }
+      { id: "audience", label: "Primary audience", placeholder: "e.g., Small-business owners, first-time homebuyers, 9th-grade students, enterprise buyers" }
     ],
     lowSignalPatterns: ["everyone", "people", "users"]
   },
   {
-    id: "value-proposition",
-    title: "Value Proposition",
-    description: "The specific 'transformation' you provide to your audience.",
+    id: "goals",
+    title: "Goals & Outcomes",
+    description: "The results you're trying to create and how you measure them.",
+    why: "Gives the AI a north star so its help stays focused on what actually matters to you.",
     fields: [
-      { id: "value", label: "Core Value", placeholder: "e.g., Reducing infrastructure costs by 40% through serverless optimization" }
+      { id: "value", label: "The value you provide", placeholder: "e.g., Help clients feel confident through their first home purchase" },
+      { id: "metrics", label: "How you measure success", placeholder: "e.g., Repeat clients, on-time delivery, students passing the state exam" }
     ],
-    lowSignalPatterns: ["quality", "best", "fast", "reliable"]
+    lowSignalPatterns: ["quality", "best", "fast", "success", "happy", "done"]
   },
   {
-    id: "standard-workflows",
-    title: "Standard Workflows",
-    description: "Step-by-step technical procedures you follow.",
+    id: "workflow",
+    title: "How You Work",
+    description: "Your typical process and how you work with others.",
+    why: "Lets the AI follow your real process instead of suggesting generic steps.",
     fields: [
-      { id: "workflow", label: "Primary Workflow", placeholder: "e.g., 1. Audit -> 2. Benchmark -> 3. Refactor -> 4. Verify" }
+      { id: "workflow", label: "Your typical process", placeholder: "e.g., Discovery call → proposal → draft → review → final delivery" },
+      { id: "collaboration", label: "How you work with others", placeholder: "e.g., Async-first, weekly check-ins, clear written briefs, decisions made openly" }
     ],
-    lowSignalPatterns: ["workflow", "process", "steps"]
+    lowSignalPatterns: ["workflow", "process", "steps", "friendly", "nice"]
   },
   {
-    id: "success-metrics",
-    title: "Success Metrics",
-    description: "How do you quantify a 'job well done'?",
+    id: "expertise",
+    title: "Expertise & Tools",
+    description: "What you know deeply and the tools you use to do it.",
+    why: "Keeps the AI from over-explaining what you already know, and grounds suggestions in your real toolkit.",
     fields: [
-      { id: "metrics", label: "Key Metrics", placeholder: "e.g., TTI < 1.2s, 0 P0 bugs in production, 90% test coverage" }
+      { id: "knowledge", label: "Areas of deep knowledge", placeholder: "e.g., Tax law, conversion copywriting, classroom management, supply-chain logistics" },
+      { id: "tools", label: "Tools you use", placeholder: "e.g., Figma, Salesforce, Google Workspace, QuickBooks, Notion" }
     ],
-    lowSignalPatterns: ["happy", "success", "done"]
+    lowSignalPatterns: ["smart", "skilled", "experienced", "everything", "stuff"]
   },
   {
-    id: "collaboration-style",
-    title: "Collaboration Style",
-    description: "Your protocol for interacting with others.",
-    fields: [
-      { id: "collaboration", label: "Interaction Protocol", placeholder: "e.g., Asynchronous-first, radical candor, RFC-driven decisions" }
-    ],
-    lowSignalPatterns: ["friendly", "nice", "team player"]
-  },
-  {
-    id: "knowledge-base",
-    title: "Knowledge Base",
-    description: "The specific domains you have deep mastery in.",
-    fields: [
-      { id: "knowledge", label: "Domain Expertise", placeholder: "e.g., FinTech regulations, Web3 security, React internals" }
-    ],
-    lowSignalPatterns: ["coding", "tech", "everything"]
-  },
-  {
-    id: "core-tools",
-    title: "Core Tools",
-    description: "Your primary technical stack and hardware.",
-    fields: [
-      { id: "tools", label: "Tooling Stack", placeholder: "e.g., Next.js, Rust, AWS, Linear, Neovim" }
-    ],
-    lowSignalPatterns: ["computer", "apps", "software"]
-  },
-  {
-    id: "philosophical-alignment",
-    title: "Philosophical Alignment",
-    description: "Your underlying engineering or business principles.",
-    fields: [
-      { id: "philosophy", label: "Core Principles", placeholder: "e.g., Simple > Easy, Premature optimization is the root of all evil" }
-    ],
-    lowSignalPatterns: ["values", "beliefs"]
-  },
-  {
-    id: "expertise-credentials",
-    title: "Expertise & Credentials",
-    description: "Hard evidence of your skills.",
-    fields: [
-      { id: "credentials", label: "Key Achievements", placeholder: "e.g., Scaled platform to 1M DAU, AWS Certified Architect" }
-    ],
-    lowSignalPatterns: ["smart", "skilled", "experienced"]
-  },
-  {
-    id: "unfair-advantage",
-    title: "Unfair Advantage",
-    description: "What makes you uniquely effective compared to others?",
-    fields: [
-      { id: "advantage", label: "Competitive Edge", placeholder: "e.g., Rare intersection of deep design sense and kernel engineering" }
-    ],
-    lowSignalPatterns: ["unique", "special"]
-  },
-  {
-    id: "voice-tone",
+    id: "voice",
     title: "Voice & Tone",
-    description: "How the AI should sound when representing you.",
+    description: "How you sound, and how the AI should sound for you.",
+    why: "Ensures everything the AI drafts reads like you, not a generic assistant.",
     fields: [
-      { id: "voice", label: "Communication Tone", placeholder: "e.g., Technical, concise, low-ego, data-driven" }
+      { id: "voice", label: "Communication style", placeholder: "e.g., Warm and plain-spoken, concise, data-driven, lightly humorous" }
     ],
     lowSignalPatterns: ["professional", "nice", "formal"]
   },
   {
-    id: "decision-rules",
-    title: "Decision Rules",
-    description: "If-Then logic for your operations.",
+    id: "principles",
+    title: "Principles & Rules",
+    description: "The values and rules of thumb that guide your decisions.",
+    why: "Anchors the AI's recommendations to what you believe and how you actually decide.",
     fields: [
-      { id: "rules", label: "Operating Heuristics", placeholder: "e.g., IF cost > $500 AND impact < 5% THEN deprecate" }
+      { id: "philosophy", label: "Guiding principles", placeholder: "e.g., Clarity over cleverness, under-promise and over-deliver, the client owns the decision" },
+      { id: "rules", label: "Rules of thumb", placeholder: "e.g., If a request is unclear, ask before starting. If it's urgent, lead with the answer." }
     ],
-    lowSignalPatterns: ["rules", "choices"]
+    lowSignalPatterns: ["values", "beliefs", "rules", "choices"]
   },
   {
-    id: "constraints",
-    title: "Constraints",
-    description: "Non-negotiable boundaries.",
+    id: "boundaries",
+    title: "Boundaries & Output",
+    description: "Your hard limits and how you want results delivered.",
+    why: "Keeps the AI inside your boundaries and delivers work in a format you can use right away.",
     fields: [
-      { id: "constraints", label: "Hard Limits", placeholder: "e.g., No working on Sundays, No legacy PHP projects" }
+      { id: "constraints", label: "Hard limits", placeholder: "e.g., No legal advice outside my state, no work on weekends, never share client names" },
+      { id: "output", label: "Preferred output format", placeholder: "e.g., Short bullet points, a draft email, a table — skip the long intros" }
     ],
-    lowSignalPatterns: ["no", "limit"]
-  },
-  {
-    id: "output-preferences",
-    title: "Output Preferences",
-    description: "Formatting and delivery requirements.",
-    fields: [
-      { id: "output", label: "Delivery Format", placeholder: "e.g., Markdown tables, executable CLI snippets, no intro/outro" }
-    ],
-    lowSignalPatterns: ["good", "clean", "output"]
+    lowSignalPatterns: ["no", "limit", "good", "clean", "output"]
   }
 ];

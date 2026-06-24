@@ -8,7 +8,7 @@ import { ExportPanel } from '@/components/ExportPanel';
 import { MobileNav } from '@/components/MobileNav';
 import { Toaster } from '@/components/ui/sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Terminal, Loader2 } from 'lucide-react';
+import { Terminal, Loader2, FileDown } from 'lucide-react';
 import { useProfileStore } from '@/store/useProfileStore';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { toast } from 'sonner';
@@ -51,7 +51,7 @@ export function HomePage() {
           </div>
           <div className="flex items-center gap-2 text-muted-foreground font-mono text-xs uppercase tracking-[0.3em]">
             <Loader2 className="w-3 h-3 animate-spin" aria-hidden="true" />
-            Initializing OS
+            Loading
           </div>
         </div>
       </div>
@@ -98,10 +98,10 @@ export function HomePage() {
             {activeMobileView === 'export' && (
               <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6">
                 <div className="w-16 h-16 rounded-2xl bg-brand flex items-center justify-center shadow-glow">
-                  <Terminal className="w-8 h-8 text-white" aria-hidden="true" />
+                  <FileDown className="w-8 h-8 text-white" aria-hidden="true" />
                 </div>
-                <h2 className="text-xl font-bold">Ready to Deploy?</h2>
-                <p className="text-muted-foreground text-sm max-w-xs">Structured context engine for Claude Skills, Gemini Gems, Custom GPTs, and more.</p>
+                <h2 className="text-xl font-bold">Ready to export?</h2>
+                <p className="text-muted-foreground text-sm max-w-xs">Download your profile as a skill file or system prompt for Claude, ChatGPT, Gemini, and more.</p>
                 <ExportPanel />
               </div>
             )}
