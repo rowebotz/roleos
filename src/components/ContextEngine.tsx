@@ -9,6 +9,19 @@ import { Sparkles, AlertTriangle, ChevronRight, History, X, CheckCircle2, Info }
 import { motion, AnimatePresence } from 'framer-motion';
 import { IntroHero } from '@/components/IntroHero';
 import { useHotkeys } from 'react-hotkeys-hook';
+import { cn } from '@/lib/utils';
+
+// Toggles a chip phrase in/out of a comma-separated free-text value, so quick taps and manual typing share one field.
+function toggleChip(current: string, chip: string): string {
+  const parts = current.split(',').map(s => s.trim()).filter(Boolean);
+  const idx = parts.findIndex(p => p.toLowerCase() === chip.toLowerCase());
+  if (idx >= 0) {
+    parts.splice(idx, 1);
+  } else {
+    parts.push(chip);
+  }
+  return parts.join(', ');
+}
 
 // Why-this-matters descriptions for each section — gives users context on how the AI uses each field
 const SECTION_WHY: Record<string, string> = {
@@ -107,6 +120,16 @@ export function ContextEngine() {
       </AnimatePresence>
 
       <header className="space-y-3">
+        <div className="flex items-center gap-2">
+          <span className={cn(
+            "text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border",
+            section.tier === "core"
+              ? "text-brand border-brand/30 bg-brand/10"
+              : "text-muted-foreground border-border bg-muted/30"
+          )}>
+            {section.tier === "core" ? "Quick Start" : "Bonus"}
+          </span>
+        </div>
         <h1 className="text-3xl font-bold tracking-tight text-foreground">{section.title}</h1>
         <p className="text-muted-foreground leading-relaxed">{section.description}</p>
         {sectionWhy && (
@@ -218,6 +241,30 @@ const FieldGroup = memo(({ field, initialValue, patterns, onUpdate, isExpanding,
           </div>
         </div>
       </div>
+
+      {field.chips && field.chips.length > 0 && (
+        <div className="flex flex-wrap gap-1.5" role="group" aria-label={`Quick picks for ${field.label}`}>
+          {field.chips.map(chip => {
+            const isActive = localValue.toLowerCase().split(',').map(s => s.trim()).includes(chip.toLowerCase());
+            return (
+              <button
+                key={chip}
+                type="button"
+                onClick={() => setLocalValue(toggleChip(localValue, chip))}
+                aria-pressed={isActive}
+                className={cn(
+                  "text-xs px-2.5 py-1 rounded-full border transition-colors",
+                  isActive
+                    ? "bg-brand text-white border-brand"
+                    : "bg-muted/50 text-muted-foreground border-border hover:border-brand/40 hover:text-foreground"
+                )}
+              >
+                {chip}
+              </button>
+            );
+          })}
+        </div>
+      )}
 
       <div className="relative group">
         <Textarea

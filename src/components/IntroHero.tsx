@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { X, ArrowRight, Sparkles, Share2, Download, Layers } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ROLE_OS_SECTIONS } from '@/data/schemas';
 
 interface IntroHeroProps {
   onDismiss: () => void;
@@ -11,13 +10,13 @@ interface IntroHeroProps {
 const STEPS = [
   {
     number: "1",
-    title: "Fill your profile",
-    desc: "Work through each section on the left — the more context you add, the better your AI will know you.",
+    title: "Answer 5 quick questions",
+    desc: "Tap chips or type a line for each — that's the whole Quick Start. Takes about 2 minutes.",
   },
   {
     number: "2",
-    title: "AI refines your input",
-    desc: "Use the ✦ Rewrite button on any field to get clearer, stronger phrasing instantly.",
+    title: "Deploy right away",
+    desc: "Quick Start alone gives you a usable profile. Level Up sections add depth whenever you want it.",
   },
   {
     number: "3",
@@ -27,8 +26,6 @@ const STEPS = [
 ];
 
 export function IntroHero({ onDismiss }: IntroHeroProps) {
-  const totalFields = ROLE_OS_SECTIONS.reduce((acc, s) => acc + s.fields.length, 0);
-
   return (
     <motion.div
       initial={{ opacity: 0, y: -20, scale: 0.98 }}
@@ -45,10 +42,10 @@ export function IntroHero({ onDismiss }: IntroHeroProps) {
               Welcome to RoleOS
             </div>
             <h1 className="text-2xl font-display font-bold tracking-tight text-foreground">
-              Build your personal AI profile in under 10 minutes
+              Build your personal AI profile in about 2 minutes
             </h1>
             <p className="text-muted-foreground text-sm leading-relaxed max-w-2xl">
-              RoleOS turns your skills, style, and context into a structured profile so AI tools including Claude, ChatGPT, and Gemini work the way you think. Fill out the sections on the left. Then export to your preferred platform.
+              Answer the 5 Quick Start questions and you're ready to export. Everything else in the sidebar is optional — add it anytime to level up your profile.
             </p>
           </div>
           <Button
