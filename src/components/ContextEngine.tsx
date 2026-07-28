@@ -90,26 +90,26 @@ export function ContextEngine() {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, height: 0 }}
-            className="flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-brand to-[#4b5cd1] border border-white/20 shadow-glow text-white"
+            className="flex items-center justify-between p-3.5 rounded-xl bg-card border border-border shadow-soft"
             role="alert"
           >
             <div className="flex items-center gap-3">
-              <History className="w-4 h-4 text-white" aria-hidden="true" />
-              <span className="text-xs font-bold uppercase tracking-widest">Resume session?</span>
+              <History className="w-4 h-4 text-brand" aria-hidden="true" />
+              <span className="text-sm font-medium text-foreground">Pick up where you left off?</span>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               <Button
                 size="sm"
                 onClick={handleResume}
-                className="h-7 px-3 text-[10px] bg-white/20 hover:bg-white/30 text-white border border-white/20 font-bold uppercase tracking-widest transition-colors"
+                className="h-7 px-3 text-xs bg-brand hover:bg-[#253694] text-white font-medium"
               >
-                Jump to task
+                Continue
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setDismissedResumeBanner(true)}
-                className="h-7 w-7 text-white/80 hover:text-white hover:bg-white/10"
+                className="h-7 w-7 text-muted-foreground hover:text-foreground"
               >
                 <X className="w-4 h-4" />
                 <span className="sr-only">Dismiss banner</span>
@@ -119,27 +119,20 @@ export function ContextEngine() {
         )}
       </AnimatePresence>
 
-      <header className="space-y-3">
-        <div className="flex items-center gap-2">
-          <span className={cn(
-            "text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full border",
-            section.tier === "core"
-              ? "text-brand border-brand/30 bg-brand/10"
-              : "text-muted-foreground border-border bg-muted/30"
-          )}>
-            {section.tier === "core" ? "Quick Start" : "Bonus"}
-          </span>
-        </div>
-        <h1 className="text-3xl font-bold tracking-tight text-foreground">{section.title}</h1>
+      <header className="space-y-2.5">
+        <span className={cn(
+          "eyebrow",
+          section.tier === "core" ? "text-brand/90" : "text-muted-foreground"
+        )}>
+          {section.tier === "core" ? "Quick Start" : "Optional"}
+        </span>
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground">{section.title}</h1>
         <p className="text-muted-foreground leading-relaxed">{section.description}</p>
         {sectionWhy && (
-          <div className="flex items-start gap-2 p-3 rounded-lg bg-brand/5 border border-brand/15">
-            <Info className="w-3.5 h-3.5 text-brand mt-0.5 shrink-0" aria-hidden="true" />
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              <span className="font-semibold text-foreground/80">Why this matters: </span>
-              {sectionWhy}
-            </p>
-          </div>
+          <p className="flex items-start gap-2 text-sm text-muted-foreground/90 leading-relaxed pt-1">
+            <Info className="w-3.5 h-3.5 text-muted-foreground/60 mt-0.5 shrink-0" aria-hidden="true" />
+            {sectionWhy}
+          </p>
         )}
       </header>
 
@@ -228,9 +221,9 @@ const FieldGroup = memo(({ field, initialValue, patterns, onUpdate, isExpanding,
   return (
     <section className="space-y-4" aria-labelledby={`label-${field.id}`}>
       <div className="flex items-end justify-between">
-        <label id={`label-${field.id}`} className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{field.label}</label>
+        <label id={`label-${field.id}`} className="text-sm font-medium text-foreground/90">{field.label}</label>
         <div className="flex items-center gap-2" aria-live="polite">
-          <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-tighter">Clarity: {score}%</span>
+          <span className="text-xs text-muted-foreground">Clarity {score}%</span>
           <div className="w-24 h-1 bg-muted/20 rounded-full overflow-hidden relative" role="progressbar" aria-valuenow={score} aria-valuemin={0} aria-valuemax={100}>
             <motion.div
               className={`h-full transition-colors duration-500 ${scoreColor}`}
@@ -285,7 +278,7 @@ const FieldGroup = memo(({ field, initialValue, patterns, onUpdate, isExpanding,
               className="absolute -top-2 -right-2 z-20"
               role="status"
             >
-              <div className="bg-emerald-500 rounded-full p-1 shadow-glow border border-emerald-400/50">
+              <div className="bg-emerald-500 rounded-full p-1 shadow-soft">
                 <CheckCircle2 className="w-4 h-4 text-emerald-50" />
                 <span className="sr-only">High clarity achieved</span>
               </div>
@@ -296,11 +289,11 @@ const FieldGroup = memo(({ field, initialValue, patterns, onUpdate, isExpanding,
         <div className="absolute bottom-3 right-3 flex items-center gap-2">
           {flags.length > 0 && (
             <div
-              className="flex items-center gap-1 text-[10px] font-bold text-amber-500/80 bg-amber-500/10 px-2 py-1 rounded border border-amber-500/20"
+              className="flex items-center gap-1 text-xs font-medium text-amber-600 dark:text-amber-400"
               role="alert"
             >
               <AlertTriangle className="w-3 h-3" aria-hidden="true" />
-              Too vague
+              A bit vague
             </div>
           )}
           <Button
@@ -310,10 +303,10 @@ const FieldGroup = memo(({ field, initialValue, patterns, onUpdate, isExpanding,
             aria-expanded={isExpanding}
             aria-controls={`variations-${field.id}`}
             title={hasInput ? "AI will rewrite this in 3 styles — clear, technical, and persuasive. Click to apply one." : "Type something first, then AI will offer rewrite suggestions."}
-            className="h-8 gap-2 bg-muted hover:bg-brand hover:text-white text-muted-foreground border-border transition-all duration-200"
+            className="h-8 gap-1.5 bg-muted hover:bg-brand hover:text-white text-muted-foreground transition-colors duration-150"
           >
-            <Sparkles className="w-3 h-3" aria-hidden="true" />
-            <span className="text-xs">✦ Rewrite</span>
+            <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
+            <span className="text-xs">Rewrite</span>
           </Button>
         </div>
       </div>
@@ -328,9 +321,9 @@ const FieldGroup = memo(({ field, initialValue, patterns, onUpdate, isExpanding,
             className="overflow-hidden space-y-2 pt-2"
           >
             {!hasInput ? (
-              <div className="p-3 rounded-md bg-muted/30 border border-border text-center">
+              <div className="p-3 rounded-md bg-muted/30 text-center">
                 <p className="text-xs text-muted-foreground">
-                  Type something in the field above, then hit <strong>✦ Rewrite</strong> to get AI-improved versions.
+                  Type something above, then hit <strong className="font-medium">Rewrite</strong> for AI-improved versions.
                 </p>
               </div>
             ) : (
@@ -342,11 +335,11 @@ const FieldGroup = memo(({ field, initialValue, patterns, onUpdate, isExpanding,
                     onUpdate(field.id, val as string);
                     setExpanding(false);
                   }}
-                  className="w-full text-left p-3 rounded-md bg-muted/50 border border-border hover:border-brand/40 hover:bg-brand/10 transition-all group relative focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full text-left p-3 rounded-md bg-muted/50 hover:bg-brand/10 transition-colors group relative focus:outline-none focus:ring-2 focus:ring-ring"
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-brand/80">{key}</span>
-                    <ChevronRight className="w-3 h-3 text-muted-foreground group-hover:translate-x-1 transition-transform" aria-hidden="true" />
+                    <span className="eyebrow text-brand/80 capitalize">{key}</span>
+                    <ChevronRight className="w-3.5 h-3.5 text-muted-foreground group-hover:translate-x-1 transition-transform" aria-hidden="true" />
                   </div>
                   <p className="text-sm text-muted-foreground group-hover:text-foreground line-clamp-2">{val as string}</p>
                 </button>

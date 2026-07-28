@@ -4,7 +4,7 @@ import { ROLE_OS_SECTIONS } from '@/data/schemas';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Copy, Download, Share2, Link as LinkIcon, Sparkles, Terminal } from 'lucide-react';
+import { Copy, Download, Share2, Link as LinkIcon } from 'lucide-react';
 import { toast } from 'sonner';
 export function ExportPanel() {
   const profile = useProfileStore(s => s.profile);
@@ -43,38 +43,35 @@ export function ExportPanel() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="btn-gradient shadow-glow gap-2 px-6">
+        <Button className="btn-gradient gap-2 px-6">
           <Share2 className="w-4 h-4" />
-          Deploy Profile
+          Export Profile
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[700px] bg-background border-border text-foreground max-h-[90vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold tracking-tight">System Deployment Hub</DialogTitle>
+          <DialogTitle className="text-2xl font-semibold tracking-tight">Export your profile</DialogTitle>
           <DialogDescription className="text-muted-foreground text-sm">
-            Export your structured context into optimized formats for Claude Skills, Gemini Gems, Custom GPTs, and more.
+            Copy or download your profile in the format your AI tool of choice expects.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-6 overflow-y-auto pr-2 custom-scrollbar">
-          <section className="p-4 rounded-xl bg-brand/10 border border-brand/20 space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <LinkIcon className="w-4 h-4 text-brand" />
-                <h3 className="text-xs font-bold uppercase tracking-widest text-foreground">Localized Short-Link</h3>
-              </div>
-              <Sparkles className="w-3 h-3 text-brand" />
+          <section className="p-4 rounded-xl bg-muted/40 space-y-3">
+            <div className="flex items-center gap-2">
+              <LinkIcon className="w-4 h-4 text-muted-foreground" />
+              <h3 className="eyebrow">Shareable link</h3>
             </div>
             {!shortcode ? (
               <Button
                 onClick={handleGenerateLink}
                 variant="outline"
-                className="w-full border-brand/30 bg-brand/5 text-foreground hover:bg-brand hover:text-white transition-colors"
+                className="w-full bg-card text-foreground hover:bg-brand hover:text-white transition-colors"
               >
-                Generate Snapshot Link
+                Create link
               </Button>
             ) : (
               <div className="flex gap-2">
-                <div className="flex-1 px-3 py-2 rounded bg-muted/70 border border-border/50 font-mono text-xs text-muted-foreground truncate">
+                <div className="flex-1 px-3 py-2 rounded bg-card text-xs text-muted-foreground truncate">
                   {shareUrl}
                 </div>
                 <Button size="icon" variant="ghost" className="bg-muted/20" onClick={() => copy(shareUrl)}>
@@ -82,13 +79,10 @@ export function ExportPanel() {
                 </Button>
               </div>
             )}
-            <p className="text-[10px] text-muted-foreground italic">Links are stored in your local browser storage for quick retrieval.</p>
+            <p className="text-xs text-muted-foreground">Stored locally in your browser — only works on this device.</p>
           </section>
           <section className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Terminal className="w-4 h-4 text-muted-foreground" />
-              <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">AI Platform Exports</h3>
-            </div>
+            <h3 className="eyebrow">Choose a format</h3>
             <Tabs defaultValue="claude" className="w-full">
               <TabsList className="bg-muted border border-border w-full justify-start h-auto p-1 mb-4 overflow-x-auto">
                 <TabsTrigger value="claude" className="data-[state=active]:bg-brand data-[state=active]:text-white">Claude Skills</TabsTrigger>

@@ -1,19 +1,19 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Layers, Edit3, Terminal, Share2 } from 'lucide-react';
+import { Layers, Edit3, Eye, Share2 } from 'lucide-react';
 import { useProfileStore } from '@/store/useProfileStore';
 import { cn } from '@/lib/utils';
 export function MobileNav() {
   const activeView = useProfileStore(s => s.activeMobileView);
   const setView = useProfileStore(s => s.setMobileView);
   const tabs = [
-    { id: 'sidebar', label: 'Taxonomy', icon: Layers, description: 'Navigate sections' },
-    { id: 'engine', label: 'Engine', icon: Edit3, description: 'Edit context' },
-    { id: 'preview', label: 'Output', icon: Terminal, description: 'View profile' },
-    { id: 'export', label: 'Deploy', icon: Share2, description: 'Export options' },
+    { id: 'sidebar', label: 'Sections', icon: Layers, description: 'Navigate sections' },
+    { id: 'engine', label: 'Edit', icon: Edit3, description: 'Edit context' },
+    { id: 'preview', label: 'Preview', icon: Eye, description: 'View profile' },
+    { id: 'export', label: 'Export', icon: Share2, description: 'Export options' },
   ] as const;
   return (
-    <nav className="fixed bottom-4 left-4 right-4 h-16 bg-card/80 backdrop-blur-xl border border-border rounded-2xl flex items-center justify-around px-2 z-50 shadow-2xl overflow-hidden" role="navigation" aria-label="Mobile workspace navigation">
+    <nav className="fixed bottom-4 left-4 right-4 h-16 bg-card/90 backdrop-blur-xl border border-border rounded-2xl flex items-center justify-around px-2 z-50 shadow-soft overflow-hidden" role="navigation" aria-label="Mobile workspace navigation">
       {tabs.map((tab) => {
         const isActive = activeView === tab.id;
         return (
@@ -34,8 +34,8 @@ export function MobileNav() {
                 aria-hidden="true"
               />
             )}
-            <tab.icon className={cn("w-5 h-5", isActive && "animate-pulse")} aria-hidden="true" />
-            <span className="text-[10px] font-bold uppercase tracking-tighter">
+            <tab.icon className="w-5 h-5" aria-hidden="true" />
+            <span className="text-[11px] font-medium">
               {tab.label}
             </span>
           </button>

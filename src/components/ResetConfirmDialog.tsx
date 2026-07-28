@@ -20,20 +20,19 @@ export function ResetConfirmDialog({ trigger, onConfirm }: ResetConfirmDialogPro
     <AlertDialog>
       <AlertDialogTrigger asChild>
         {trigger || (
-          <button className="flex items-center gap-2 px-3 py-2 text-xs font-bold uppercase tracking-widest text-destructive/70 hover:text-destructive hover:bg-destructive/10 rounded-md transition-all">
-            <Trash2 className="w-3 h-3" />
-            System Reset
+          <button className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-destructive/70 hover:text-destructive hover:bg-destructive/10 rounded-md transition-colors">
+            <Trash2 className="w-3.5 h-3.5" />
+            Reset profile
           </button>
         )}
       </AlertDialogTrigger>
       <AlertDialogContent className="bg-background border-border text-foreground">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-xl font-bold tracking-tight text-foreground">
-            Confirm System Wipe?
+          <AlertDialogTitle className="text-xl font-semibold tracking-tight text-foreground">
+            Reset your profile?
           </AlertDialogTitle>
           <AlertDialogDescription className="text-muted-foreground text-sm">
-            This will permanently delete your current Operating Profile and reset all local configuration.
-            This action cannot be undone.
+            Everything you've entered will be cleared from this browser. This can't be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="mt-4">
@@ -42,9 +41,9 @@ export function ResetConfirmDialog({ trigger, onConfirm }: ResetConfirmDialogPro
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
-            className="bg-destructive hover:bg-destructive/90 text-destructive-foreground border-none shadow-destructive/40"
+            className="bg-destructive hover:bg-destructive/90 text-destructive-foreground border-none"
           >
-            Wipe Profile
+            Reset profile
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

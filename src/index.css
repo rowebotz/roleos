@@ -79,6 +79,9 @@
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     text-rendering: optimizeLegibility;
   }
+  h1, h2, h3 {
+    letter-spacing: -0.02em;
+  }
   /* Reduced Motion Support */
   @media (prefers-reduced-motion: reduce) {
     html {
@@ -101,11 +104,10 @@
     @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:ring-2 focus:ring-ring focus:ring-offset-2;
   }
   .btn {
-    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
   }
   .btn-gradient {
-    @apply btn text-white shadow-primary hover:shadow-glow hover:scale-[1.02] active:scale-95;
-    background: linear-gradient(135deg, #3043b4 0%, #253491 100%);
+    @apply btn bg-brand text-white shadow-soft hover:bg-[#253694] active:opacity-90;
   }
   .text-gradient {
     background: linear-gradient(90deg, #3043b4 0%, #5c6ce4 100%);
@@ -118,5 +120,9 @@
   }
   .glass-dark {
     @apply bg-black/10 backdrop-blur-md border border-white/10 shadow-glass;
+  }
+  /* Small caption label above a heading — quiet, not shouting. */
+  .eyebrow {
+    @apply text-[11px] font-medium tracking-wide text-muted-foreground/80;
   }
 }

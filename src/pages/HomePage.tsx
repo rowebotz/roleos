@@ -8,7 +8,7 @@ import { ExportPanel } from '@/components/ExportPanel';
 import { MobileNav } from '@/components/MobileNav';
 import { Toaster } from '@/components/ui/sonner';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { Terminal, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { useProfileStore } from '@/store/useProfileStore';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { toast } from 'sonner';
@@ -46,12 +46,12 @@ export function HomePage() {
     return (
       <div className="h-screen w-full bg-background flex items-center justify-center" role="status" aria-live="assertive">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-12 h-12 rounded-lg bg-brand flex items-center justify-center shadow-[0_0_30px_-5px_rgba(48,67,180,0.6)] animate-pulse">
-            <Terminal className="w-6 h-6 text-white" aria-hidden="true" />
+          <div className="w-11 h-11 rounded-2xl bg-brand flex items-center justify-center shadow-soft">
+            <span className="font-display font-semibold text-lg text-white" aria-hidden="true">R</span>
           </div>
-          <div className="flex items-center gap-2 text-muted-foreground font-mono text-xs uppercase tracking-[0.3em]">
-            <Loader2 className="w-3 h-3 animate-spin" aria-hidden="true" />
-            Initializing OS
+          <div className="flex items-center gap-2 text-muted-foreground text-sm">
+            <Loader2 className="w-3.5 h-3.5 animate-spin" aria-hidden="true" />
+            Loading your profile
           </div>
         </div>
       </div>
@@ -62,11 +62,11 @@ export function HomePage() {
       <a href="#main-content" className="skip-link">Skip to main content</a>
       <header className="h-14 border-b border-border px-6 flex items-center justify-between bg-card backdrop-blur-md z-30 shrink-0" role="banner">
         <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded bg-brand flex items-center justify-center shadow-[0_0_15px_-3px_rgba(48,67,180,0.5)]">
-              <Terminal className="w-4 h-4 text-white" aria-hidden="true" />
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-brand flex items-center justify-center">
+              <span className="font-display font-semibold text-sm text-white" aria-hidden="true">R</span>
             </div>
-            <span className="font-display font-bold text-lg tracking-tighter text-foreground">RoleOS</span>
+            <span className="font-display font-semibold text-lg text-foreground">RoleOS</span>
           </div>
         </div>
         <div className="flex items-center gap-4">
@@ -97,11 +97,11 @@ export function HomePage() {
             {activeMobileView === 'preview' && <ProfilePreview />}
             {activeMobileView === 'export' && (
               <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6">
-                <div className="w-16 h-16 rounded-2xl bg-brand flex items-center justify-center shadow-glow">
-                  <Terminal className="w-8 h-8 text-white" aria-hidden="true" />
+                <div className="w-16 h-16 rounded-2xl bg-brand flex items-center justify-center shadow-soft">
+                  <span className="font-display font-semibold text-2xl text-white" aria-hidden="true">R</span>
                 </div>
-                <h2 className="text-xl font-bold">Ready to Deploy?</h2>
-                <p className="text-muted-foreground text-sm max-w-xs">Structured context engine for Claude Skills, Gemini Gems, Custom GPTs, and more.</p>
+                <h2 className="text-xl font-semibold">Ready to export?</h2>
+                <p className="text-muted-foreground text-sm max-w-xs">Turn your profile into a Claude Skill, Gemini Gem, Custom GPT, or raw JSON.</p>
                 <ExportPanel />
               </div>
             )}

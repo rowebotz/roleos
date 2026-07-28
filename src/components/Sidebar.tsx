@@ -127,15 +127,15 @@ export function Sidebar() {
   return (
     <nav className="flex flex-col h-full w-full md:w-64 md:border-r border-border bg-sidebar backdrop-blur-xl" aria-label="Taxonomy list">
       <div className="p-6 border-b border-border flex items-center justify-between">
-        <h2 className="text-sm font-bold tracking-widest text-muted-foreground uppercase">Sections</h2>
-        <Settings2 className="w-3 h-3 text-muted-foreground" aria-hidden="true" />
+        <h2 className="text-[13px] font-medium text-muted-foreground">Sections</h2>
+        <Settings2 className="w-3.5 h-3.5 text-muted-foreground/70" aria-hidden="true" />
       </div>
       <ScrollArea className="flex-1">
-        <div className="p-2 space-y-4" role="tablist" aria-orientation="vertical">
+        <div className="p-2 space-y-5" role="tablist" aria-orientation="vertical">
           <div className="space-y-1">
-            <div className="flex items-center justify-between px-3 pt-1 pb-1">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-brand/80">Quick Start</span>
-              <span className="text-[10px] font-mono text-muted-foreground">{coreFilled}/{coreTotal}</span>
+            <div className="flex items-center justify-between px-3 pt-2 pb-1">
+              <span className="eyebrow text-brand/90">Quick Start</span>
+              <span className="text-xs text-muted-foreground tabular-nums">{coreFilled}/{coreTotal}</span>
             </div>
             {CORE_SECTIONS.map(section => (
               <SectionRow key={section.id} section={section} isActive={activeSectionId === section.id} onSelect={setActiveSection} />
@@ -145,16 +145,16 @@ export function Sidebar() {
           <div className="space-y-1">
             <button
               onClick={() => setBonusOpen(v => !v)}
-              className="w-full flex items-center justify-between px-3 pt-1 pb-1 text-left"
+              className="w-full flex items-center justify-between px-3 pt-2 pb-1 text-left"
               aria-expanded={bonusOpen}
               aria-controls="bonus-sections"
             >
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                Level Up <span className="opacity-60 normal-case font-medium">(optional)</span>
+              <span className="eyebrow">
+                Level Up <span className="opacity-70">(optional)</span>
               </span>
-              <span className="flex items-center gap-1.5 text-[10px] font-mono text-muted-foreground">
+              <span className="flex items-center gap-1.5 text-xs text-muted-foreground tabular-nums">
                 {bonusFilled}/{BONUS_SECTIONS.length}
-                <ChevronDown className={cn("w-3 h-3 transition-transform", bonusOpen && "rotate-180")} aria-hidden="true" />
+                <ChevronDown className={cn("w-3.5 h-3.5 transition-transform", bonusOpen && "rotate-180")} aria-hidden="true" />
               </span>
             </button>
             <AnimatePresence initial={false}>
@@ -178,16 +178,16 @@ export function Sidebar() {
       <div className="p-4 border-t border-border bg-sidebar/70 space-y-4">
         <div>
           <div className="flex items-center justify-between mb-2">
-            <span className="flex items-center gap-1.5 text-xs font-bold" aria-live="polite">
-              <level.Icon className={cn("w-3.5 h-3.5", level.color)} aria-hidden="true" />
+            <span className="flex items-center gap-1.5 text-sm font-medium" aria-live="polite">
+              <level.Icon className={cn("w-4 h-4", level.color)} aria-hidden="true" />
               <span className={level.color}>{level.name}</span>
             </span>
-            <span className="text-[10px] font-mono text-muted-foreground">
+            <span className="text-xs text-muted-foreground tabular-nums">
               {filledFields}/{totalFields} filled
             </span>
           </div>
           <div
-            className="h-2 bg-muted rounded-full overflow-hidden"
+            className="h-1.5 bg-muted rounded-full overflow-hidden"
             role="progressbar"
             aria-valuenow={progressPercent}
             aria-valuemin={0}
@@ -197,16 +197,12 @@ export function Sidebar() {
             <div
               className={cn(
                 "h-full transition-all duration-500",
-                progressPercent === 100
-                  ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
-                  : progressPercent > 50
-                  ? "bg-brand shadow-[0_0_8px_rgba(48,67,180,0.5)]"
-                  : "bg-brand/70"
+                progressPercent === 100 ? "bg-emerald-500" : "bg-brand"
               )}
               style={{ width: `${progressPercent}%` }}
             />
           </div>
-          <p className="text-[10px] text-muted-foreground mt-1">
+          <p className="text-xs text-muted-foreground mt-1.5">
             {coreFilled < coreTotal
               ? `${coreTotal - coreFilled} quick question${coreTotal - coreFilled === 1 ? '' : 's'} left to reach Operator`
               : progressPercent === 100
